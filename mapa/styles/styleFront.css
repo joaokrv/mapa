@@ -1,0 +1,410 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Isso evita que vazamentos criem barras de rolagem horizontais */
+
+}
+
+body {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #3e0b76, #a134f0, #c652ff);
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative; /* permite posicionar filhos absolutos corretamente */
+  z-index: 0;
+}
+
+/* Formulário de entrada */
+.form-container {
+  position: relative;
+
+  left: 30%;
+  background-color: white;
+  border-radius: 15px;
+  padding: 30px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  color: #000000;
+  z-index: 1; /* fica acima da imagem */
+  margin-top: 60px; /* se quiser dar espaço da imagem */
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-weight: bold;
+  text-align: left;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Botões */
+.button {
+  text-align: center;
+  padding: 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: 0.3s ease;
+  display: block;
+}
+
+.login-btn {
+  background-color: #1a56db;
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #143ba9;
+  transform: scale(1.03);
+}
+
+.access-help {
+  border: 2px solid #1a56db;
+  color: #1a56db;
+  background-color: transparent;
+}
+
+.access-help:hover {
+  background-color: #f0f8ff;
+}
+
+/* Seção de separação */
+.separator {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #888;
+  font-size: 14px;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #ddd;
+  margin: 0 10px;
+}
+
+/* Link de colaboração */
+.collab-link {
+  font-size: 14px;
+  color: #1a56db;
+  text-decoration: none;
+}
+
+.collab-link:hover {
+  text-decoration: underline;
+}
+
+.img {
+  position: absolute;
+  top: 30%;
+  left: 20%;
+  z-index: -1; /* vai para o fundo */
+  width: 400px;
+  height: auto;
+}
+
+/* Ajuste específico para telas com até 344px de largura */
+@media (max-width: 344px) {
+  .form-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    font-size: 0.8rem;
+    width: 95%;
+    margin-bottom: 30px;
+  }
+
+  h2 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .input-group input {
+    padding: 8px;
+    font-size: 0.8rem;
+    width: 100%;
+  }
+
+  .button {
+    padding: 8px;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .img {
+    display: none;  /* Esconde a imagem nesta tela */
+  }
+}
+
+/* Ajuste específico para telas com até 380px de largura */
+@media (max-width: 380px) {
+  .form-container {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    padding: 20px;
+    font-size: 0.8rem;
+    width: 95%;
+    margin-bottom: 30px;
+  }
+
+  h2 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .input-group input {
+    padding: 8px;
+    font-size: 0.8rem;
+    width: 100%;
+  }
+
+  .button {
+    padding: 8px;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .img {
+    position: relative;
+    left: 0;
+    top: auto;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 120px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+/* Responsividade para telas pequenas (até 480px) */
+@media (max-width: 480px) {
+  .form-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    padding: 12px;
+    margin: 5px auto;
+    width: 90%;
+    font-size: 0.9rem;
+  }
+
+  h2 {
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+  }
+
+  .input-group input {
+    font-size: 0.85rem;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .button {
+    padding: 10px;
+    font-size: 0.95rem;
+    width: 100%;
+  }
+
+  .img {
+    position: relative;
+    left: 0;
+    top: auto;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+ /* Responsividade para telas médias (até 769px) */
+@media (min-width: 481px) and (max-width: 769px) {
+  .form-container {
+    position: relative;
+    top: 5%;
+    left: 0;
+    width: 90%;
+    font-size: 1.1rem; /* Aumentei a fonte um pouco para melhorar a legibilidade */
+    padding: 15px;
+    margin: 0 auto;
+    box-sizing: border-box; /* Garante que o padding não ultrapasse a largura */
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    margin-bottom: 15px;
+  }
+
+  .input-group input {
+    font-size: 1rem;
+    padding: 12px;
+    width: 100%;
+  }
+
+  .button {
+    padding: 12px;
+    font-size: 1.25rem;
+    width: 100%; /* Botão ocupa toda a largura disponível */
+  }
+
+  .img {
+    position: absolute;
+    left: 50%;
+    top: -100%;
+    margin-top: 30%;
+    width: 80%; /* Ajusta a imagem para não ultrapassar a largura do contêiner */
+    max-width: 260px; /* Garante que a imagem não fique muito grande */
+    height: auto;
+  }
+}
+
+/* Responsividade para telas grandes (até 932px) */
+@media (max-width: 932px) {
+  .form-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    margin: 0 auto;
+    width: 85%;
+    font-size: 1rem;
+    background-color: #fff;
+    text-align: center;
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .input-group input {
+    font-size: 1rem;
+    padding: 12px;
+    width: 100%;
+  }
+
+  .button {
+    padding: 12px;
+    font-size: 1.1rem;
+    width: 100%;
+  }
+
+  .img {
+    position: absolute;
+    left: 40%;
+    transform: translateX(-20%);  /* Ajuste para garantir centralização exata */
+    top: -100%;
+    margin-top: 30%;
+    width: 80%; /* Ajusta a imagem para não ultrapassar a largura do contêiner */
+    max-width: 400px; /* Garante que a imagem não fique muito grande */
+    height: auto;
+  }
+
+}
+
+@media (max-width: 1024px) {
+  .form-container {
+    position: relative;
+    top: 15%;
+    left: 0;
+    width: 80%; /* Limita a largura para não ocupar a tela inteira, mantendo uma boa margem */
+    height: auto; /* Permite que o contêiner se ajuste ao conteúdo */
+    padding: 25px;
+    font-size: 1.2rem;
+    margin: 0 auto;
+    margin-bottom: 5%;
+    box-sizing: border-box;
+    background-color: #f9f9f9; /* Um fundo sutil para destaque */
+    border-radius: 10px; /* Adiciona bordas arredondadas para um toque mais moderno */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra leve para dar profundidade */
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .input-group input {
+    font-size: 1.1rem;
+    padding: 14px;
+    width: 100%;
+    border-radius: 5px; /* Bordas arredondadas para inputs */
+    border: 1px solid #ccc; /* Bordas suaves */
+  }
+
+  .button {
+    padding: 15px;
+    font-size: 1.2rem;
+    width: 100%;
+    background-color: #007BFF; /* Cor de fundo mais vibrante */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: #0056b3; /* Efeito de hover */
+  }
+
+  .img {
+    position: absolute;
+    margin-top: -10%;
+    left: 50%;  /* Centraliza a imagem */
+    transform: translateX(-60%);  /* Ajuste para garantir centralização exata */
+    width: 400px;
+    height: 200px;
+    display: block;
+  }
+}

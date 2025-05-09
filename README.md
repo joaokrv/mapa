@@ -13,20 +13,13 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 
 ## 🚀 Funcionalidades planejadas
 
-- 🔐 Sistema de login com autenticação
+- 🔐 Sistema de login
 - 🧭 Exibição de rotas até salas, refeitórios, quadras e outros locais
 - 🆘 Botão de emergência para situações de risco
 - 📞 Canal direto para contato com a instituição
-- 🤖 Assistente virtual para dúvidas frequentes
-- 🧾 Sugestão de rotas com base na agenda de aulas do aluno
-- 📍 Compartilhamento de localização com amigos
-- 🧑‍🤝‍🧑 Criação de salas com localizações compartilhadas
+- 📍 Compartilhamento de localização
 - 📣 Reporte de erros ou ocorrências no mapa
-- ✉️ Recuperação de senha por e-mail ou SMS
 - 🧠 Interface amigável e intuitiva
-- 🧑‍🎨 Personalização de cores e menus
-- 🧬 Login por biometria (em dispositivos compatíveis)
-- 🗣️ Suporte à acessibilidade: leitura de tela e comandos de voz
 
 ## 🛠️ Tecnologias
 

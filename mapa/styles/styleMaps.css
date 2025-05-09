@@ -1,0 +1,134 @@
+/* RESET de estilos e configuração geral */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  height: 100%;
+  background: linear-gradient(135deg, #3e0b76, #a134f0, #c652ff);
+  background-size: cover;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Mapa */
+#map {
+  width: 100%;
+  height: 100vh;
+}
+
+/* Caixa de entrada fixa */
+.input-box {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  width: 90%;
+  max-width: 400px;
+}
+
+/* Estilo dos inputs */
+.input-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Estilo do botão "Calcular Rota" */
+#calcRota {
+  background-color: #1a56db;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  border-radius: 5px;
+  transition: 0.3s ease;
+  width: 100%;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#calcRota:hover {
+  background-color: #143ba9;
+  transform: scale(1.03);
+}
+
+/* Telas médias (tablets e celulares grandes) */
+@media (min-width: 481px) and (max-width: 767px) {
+  .input-box {
+    padding: 14px 18px;
+  }
+
+  .input-box input,
+  #calcRota {
+    font-size: 15px;
+  }
+}
+
+/* Telas pequenas (celulares) */
+@media (max-width: 480px) {
+  .input-box {
+    bottom: 15px;
+    padding: 12px;
+  }
+
+  .input-box input,
+  #calcRota {
+    font-size: 14px;
+  }
+}
+
+/* Telas grandes (desktops e telas maiores) */
+@media (min-width: 1024px) {
+  body {
+    background: linear-gradient(135deg, #3e0b76, #a134f0, #c652ff);
+    font-size: 16px;
+  }
+
+  .input-box {
+    bottom: 30px;
+    padding: 16px 20px;
+    width: 400px;
+    max-width: none;
+  }
+
+  .input-box input,
+  #calcRota {
+    font-size: 16px;
+  }
+}
+
+/* Telas extra grandes (monitores e telas de grande resolução) */
+@media (min-width: 1440px) {
+  body {
+    background: linear-gradient(135deg, #3e0b76, #a134f0, #c652ff);
+    font-size: 16px;
+  }
+
+  .input-box {
+    bottom: 40px;
+    padding: 18px 22px;
+    width: 500px;
+    max-width: none;
+  }
+
+  .input-box input,
+  #calcRota {
+    font-size: 18px;
+  }
+}
