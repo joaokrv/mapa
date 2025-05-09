@@ -17,7 +17,10 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 - 🧭 Exibição de rotas até salas, refeitórios, quadras e outros locais
 - 🆘 Botão de emergência para situações de risco
 - 📞 Canal direto para contato com a instituição
-- 📍 Compartilhamento de localização
+- 🤖 Assistente virtual para dúvidas frequentes
+- 🧾 Sugestão de rotas com base na agenda de aulas do aluno
+- 📍 Compartilhamento de localização com amigos
+- 🧑‍🤝‍🧑 Criação de salas com localizações compartilhadas
 - 📣 Reporte de erros ou ocorrências no mapa
 - 🧠 Interface amigável e intuitiva
 
