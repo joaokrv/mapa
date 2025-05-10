@@ -141,7 +141,7 @@ label {
   top: 30%;
   left: 20%;
   z-index: -1; /* vai para o fundo */
-  width: 400px;
+  width: 600px;
   height: auto;
 }
 

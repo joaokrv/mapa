@@ -14,16 +14,18 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 ## 🚀 Funcionalidades planejadas
 
 - 🔐 Sistema de login
-- 🧭 Exibição de rotas até salas, refeitórios, quadras e outros locais
+- 🧭 Exibição de rotas até o destino
 - 🆘 Botão de emergência para situações de risco
-- 📞 Canal direto para contato com a instituição
-- 📍 Compartilhamento de localização
+- 📞 Canal direto para contato com alguém da instituição
 - 📣 Reporte de erros ou ocorrências no mapa
 - 🧠 Interface amigável e intuitiva
 
 ## 🛠️ Tecnologias
 
-> As tecnologias ainda estão em fase de escolha. A equipe está analisando as melhores ferramentas para atender aos requisitos de geolocalização, responsividade, acessibilidade e segurança.
+- 🌐 HTML
+- 🎨 CSS
+- ⚙️ JavaScript (JS)
+- 🗺️ API OpenStreetMaps
 
 ## 💡 Público-alvo
 
@@ -36,11 +38,6 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 
 O projeto será uma **aplicação web responsiva**, com plano futuro de expansão para dispositivos móveis.
 
-## 📌 Status
-
-🚧 **Em desenvolvimento**  
-No momento, a equipe está na fase de planejamento, levantamento de requisitos e organização das funcionalidades principais.
-
 ## 🤝 Contribuição
 
 Este projeto está sendo desenvolvido em equipe por alunos do curso de **Engenharia de Software**, com foco na aplicação prática de metodologias de desenvolvimento, usabilidade e design centrado no usuário.
@@ -51,7 +48,7 @@ A ideia original do projeto **Mapa Faculdade** foi concebida por **Breno**, cole
 
 ## 🧑‍🏫 Professor orientador
 
-Este projeto está sendo desenvolvido sob orientação do professor **Fabrício**, no curso de **Engenharia de Software**.
+Este projeto está sendo desenvolvido sob orientação do professor **Fabrício Valadares**, no curso de **Engenharia de Software**.
 
 ## 👨‍💻 Autor
 
