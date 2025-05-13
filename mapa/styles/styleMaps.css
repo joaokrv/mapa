@@ -8,8 +8,6 @@
 body {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   height: 100%;
-  background: linear-gradient(135deg, #3e0b76, #a134f0, #c652ff);
-  background-size: cover;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -68,6 +66,67 @@ body {
   transform: scale(1.03);
 }
 
+/* Estilizando o container da rota do Leaflet Routing Machine */
+.leaflet-routing-container.leaflet-bar.leaflet-control {
+  background-color: rgba(0, 0, 0, 0.8); /* fundo semitransparente escuro */
+  color: #fff;
+  font-family: 'Lucida Sans', sans-serif;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.leaflet-routing-container.leaflet-bar.leaflet-control td {
+  padding-right: 15px;
+  line-height: 2;
+}
+
+/* Links e botões dentro do container */
+.leaflet-routing-container a {
+  color: #a134f0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.leaflet-routing-container a:hover {
+  text-decoration: underline;
+}
+
+/* Botões de controle de rota (tipo "X" para fechar ponto) */
+.leaflet-routing-container .leaflet-routing-collapse-btn,
+.leaflet-routing-container .leaflet-routing-alt .leaflet-routing-alt-btn {
+  background-color: #1a56db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.leaflet-routing-container .leaflet-routing-collapse-btn:hover,
+.leaflet-routing-container .leaflet-routing-alt .leaflet-routing-alt-btn:hover {
+  background-color: #143ba9;
+}
+
+footer {
+  color: black;
+  background-color: rgb(255, 255, 255);
+  height: 100%;
+  width: 100%;
+  text-align: center ;
+}
+
+/* Responsividade se quiser esconder ou adaptar em telas pequenas */
+@media (max-width: 480px) {
+  .leaflet-routing-container.leaflet-bar.leaflet-control {
+    font-size: 14px;
+    max-height: 200px;
+  }
+}
+
 /* Telas médias (tablets e celulares grandes) */
 @media (min-width: 481px) and (max-width: 767px) {
   .input-box {
@@ -111,12 +170,20 @@ body {
   #calcRota {
     font-size: 16px;
   }
+  
+  footer {
+    color: black;
+    background-color: rgb(255, 255, 255);
+    height: 100%;
+    width: 100%;
+    text-align: center ;
+  }
 }
 
 /* Telas extra grandes (monitores e telas de grande resolução) */
 @media (min-width: 1440px) {
   body {
-    background: linear-gradient(135deg, #3e0b76, #a134f0, #c652ff);
+    background-color: linear-gradient(135deg, #3e0b76, #a134f0, #c652ff);
     font-size: 16px;
   }
 
@@ -130,5 +197,13 @@ body {
   .input-box input,
   #calcRota {
     font-size: 18px;
+  }
+  
+  footer {
+    color: black;
+    background-color: rgb(255, 255, 255);
+    height: 100%;
+    width: 100%;
+    text-align: center ;
   }
 }
