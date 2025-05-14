@@ -4,16 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maps UniBH</title>
+  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="../styles/styleMaps.css">
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <!-- Leaflet Routing Machine CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 
-  <style>
-    #map { height: 100vh; }
-  </style>
-  
 </head>
 <body>
 
@@ -97,7 +94,6 @@
             console.log("Coordenadas de destino:", destinoCoord);  // Log para depuração
 
             // Criar nova rota
-            console.log("Configuração do router:", { profile: 'foot' });
             routingControl = L.Routing.control({
               waypoints: [
                 L.latLng(origemCoord[0], origemCoord[1]),
