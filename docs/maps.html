@@ -4,30 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maps UniBH</title>
-  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="../styles/styleMaps.css">
+  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/styles/styleMaps.css">
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <!-- Leaflet Routing Machine CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-
 </head>
 <body>
 
 <div class="input-box">
   <input type="text" id="origem" placeholder="Digite seu local de origem">
   <input type="text" id="destino" placeholder="Digite seu destino">
-  <br><button onclick="calcularRota()" id="calcRota">Calcular Rota</button>
+  <button onclick="calcularRota()" id="calcRota">Calcular Rota</button>
 </div>
 
 <div id="map"></div>
 
-<!-- Leaflet JS -->
+<!-- Scripts -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Leaflet Routing Machine JS -->
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <script>
+  // Inicialização do mapa
   var map = L.map('map', {
     center: [-19.9716538355151, -43.96324375462156],
     zoom: 20,
@@ -54,102 +53,206 @@
     .openPopup();
 
   var routingControl; // Guarda a rota atual
+  var currentStraightLine = null; // Guarda a linha reta atual
 
-  function calcularRota() {
-    var origem = document.getElementById('origem').value;
-    var destino = document.getElementById('destino').value;
+  // Limites do campus UniBH
+  var bounds = L.latLngBounds(
+    L.latLng(-19.96967239132942, -43.96451512163013),
+    L.latLng(-19.972541764414082, -43.962061590405)
+  );
+
+  // Função para ajustar o mapa dentro dos limites
+  function ajustarMapa() {
+    if (!map.getBounds().intersects(bounds)) {
+      map.fitBounds(bounds);
+    }
+    if (map.getZoom() < 19) map.setZoom(19);
+  }
+
+  // Configurações de restrição
+  map.setMaxBounds(bounds);
+  map.on('drag', ajustarMapa);
+  map.on('zoomend', ajustarMapa);
+
+  // Bloqueia zoom com scroll fora dos bounds
+  map.on('mouseout', () => {
+    if (!map.getBounds().intersects(bounds)) {
+      map.scrollWheelZoom.disable();
+    }
+  });
+
+  map.on('mouseover', () => {
+    map.scrollWheelZoom.enable();
+  });
+
+  // Função para criar marcador
+  function criarMarcador(posicao, tipo) {
+    return L.marker(posicao, {
+      icon: L.icon({
+        iconUrl: tipo === 'origem' 
+          ? 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png'
+          : 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png',
+        iconSize: [50, 50],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
+      })
+    }).bindPopup(tipo === 'origem' ? "Origem" : "Destino");
+  }
+
+  // Função para criar rota em linha reta
+  function criarRotaLinhaReta(origem, destino) {
+    // Remove rota anterior
+    if (routingControl) {
+      map.removeControl(routingControl);
+      routingControl = null;
+    }
+    
+    // Remove linha reta anterior se existir
+    if (currentStraightLine) {
+      currentStraightLine.linha.remove();
+      currentStraightLine.marcadores.forEach(m => m.remove());
+    }
+
+    // Cria linha reta
+    const linhaReta = L.polyline([origem, destino], {
+      color: '#FFA500',
+      weight: 5,
+      dashArray: '10, 10',
+      opacity: 0.8
+    }).addTo(map);
+
+    // Adiciona marcadores
+    const origemMarker = criarMarcador(origem, 'origem');
+    const destinoMarker = criarMarcador(destino, 'destino');
+    
+    origemMarker.addTo(map);
+    destinoMarker.addTo(map);
+
+    // Ajusta a visualização
+    map.fitBounds(L.latLngBounds(origem, destino));
+
+    // Guarda referência para remoção
+    currentStraightLine = {
+      linha: linhaReta,
+      marcadores: [origemMarker, destinoMarker]
+    };
+  }
+
+  // Função para criar rota a pé usando OSRM
+  function criarRotaPe(origem, destino) {
+    return new Promise((resolve, reject) => {
+      // Remove linha reta anterior se existir
+      if (currentStraightLine) {
+        currentStraightLine.linha.remove();
+        currentStraightLine.marcadores.forEach(m => m.remove());
+        currentStraightLine = null;
+      }
+
+      // Remove rota anterior
+      if (routingControl) {
+        map.removeControl(routingControl);
+      }
+
+      routingControl = L.Routing.control({
+        waypoints: [origem, destino],
+        router: L.Routing.osrmv1({
+          serviceUrl: 'https://router.project-osrm.org/route/v1',
+          profile: 'foot'
+        }),
+        addWaypoints: false,
+        createMarker: function(i, waypoint, n) {
+          return criarMarcador(waypoint.latLng, i === 0 ? 'origem' : 'destino');
+        }
+      }).addTo(map);
+
+      routingControl.on('routesfound', function(e) {
+        resolve(e.routes[0]);
+      });
+
+      routingControl.on('routingerror', function(e) {
+        reject(e.error);
+      });
+    });
+  }
+
+  // Função principal para cálculo de rota
+  async function calcularRota() {
+    console.log('Iniciando cálculo de rota...');
+    const btn = document.getElementById('calcRota');
+    const origem = document.getElementById('origem').value;
+    const destino = document.getElementById('destino').value;
+
+    console.log(`Origem: ${origem}, Destino: ${destino}`);
 
     if (!origem || !destino) {
+      console.warn('Campos de origem/destino vazios');
       alert('Por favor, preencha ambos os campos de origem e destino.');
       return;
     }
 
-    // Remove rota anterior, se existir
-    if (routingControl) {
-      map.removeControl(routingControl);
+    // Feedback visual
+    btn.innerHTML = '<span class="spinner">⌛</span> Calculando...';
+    btn.disabled = true;
+
+    try {
+      // Geocodificar origem
+      console.log(`Geocodificando origem: ${origem}`);
+      const origemData = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(origem)}`)
+        .then(r => r.json());
+      
+      console.log('Dados da origem:', origemData);
+
+      if (origemData.length === 0) {
+        alert('Origem não encontrada. Tente novamente.');
+        return;
+      }
+      const origemCoord = L.latLng(parseFloat(origemData[0].lat), parseFloat(origemData[0].lon));
+      console.log(`Coordenadas da origem: ${origemCoord}`);
+
+      // Geocodificar destino
+      console.log(`Geocodificando destino: ${destino}`);
+      const destinoData = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destino)}`)
+        .then(r => r.json());
+      
+      console.log('Dados do destino:', destinoData);
+      
+      if (destinoData.length === 0) {
+        alert('Destino não encontrado. Tente novamente.');
+        return;
+      }
+      const destinoCoord = L.latLng(parseFloat(destinoData[0].lat), parseFloat(destinoData[0].lon));
+      console.log(`Coordenadas do destino: ${destinoCoord}`);
+
+      // Verifica se as coordenadas estão dentro do campus
+      const origemDentro = bounds.contains(origemCoord);
+      const destinoDentro = bounds.contains(destinoCoord);
+      console.log(`Verificação de limites - Origem: ${origemDentro}, Destino: ${destinoDentro}`);
+
+      if (!origemDentro || !destinoDentro) {
+        alert('Um ou ambos os locais estão fora do campus UniBH. Por favor, insira locais dentro do campus.');
+        return;
+      }
+
+      // Primeiro tentamos calcular a rota a pé
+      try {
+        console.log('Tentando calcular rota a pé...');
+        await criarRotaPe(origemCoord, destinoCoord);
+        console.log('Rota a pé calculada com sucesso');
+      } catch (error) {
+        console.warn('Erro ao calcular rota a pé, usando linha reta:', error);
+        criarRotaLinhaReta(origemCoord, destinoCoord);
+        alert('Rota detalhada não disponível. Mostrando caminho em linha reta.');
+      }
+
+    } catch (error) {
+      console.error('Erro no cálculo da rota:', error);
+      alert('Ocorreu um erro ao calcular a rota. Tente novamente.');
+    } finally {
+      console.log('Finalizando processo de cálculo de rota');
+      btn.textContent = 'Calcular Rota';
+      btn.disabled = false;
     }
-
-    // Geocodificar origem
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${origem}`)
-      .then(response => response.json())
-      .then(dataOrigem => {
-        console.log('Dados da origem:', dataOrigem);  // Log para depuração
-        if (dataOrigem.length === 0) {
-          alert('Origem não encontrada. Tente novamente.');
-          return;
-        }
-        var origemCoord = [parseFloat(dataOrigem[0].lat), parseFloat(dataOrigem[0].lon)];
-        console.log("Coordenadas de origem:", origemCoord);  // Log para depuração
-
-        // Geocodificar destino
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${destino}`)
-          .then(response => response.json())
-          .then(dataDestino => {
-            console.log('Dados do destino:', dataDestino);  // Log para depuração
-            if (dataDestino.length === 0) {
-              alert('Destino não encontrado. Tente novamente.');
-              return;
-            }
-            var destinoCoord = [parseFloat(dataDestino[0].lat), parseFloat(dataDestino[0].lon)];
-            console.log("Coordenadas de destino:", destinoCoord);  // Log para depuração
-
-            // Criar nova rota
-            routingControl = L.Routing.control({
-              waypoints: [
-                L.latLng(origemCoord[0], origemCoord[1]),
-                L.latLng(destinoCoord[0], destinoCoord[1])
-              ],
-              lineOptions: {
-                styles: [{ color: 'blue', weight: 5 }]
-              },
-              addWaypoints: false,
-              createMarker: function(i, waypoint, n) {
-                return L.marker(waypoint.latLng, {
-                  icon: L.icon({
-                    iconUrl: i === 0
-                      ? 'https://cdn-icons-png.flaticon.com/512/684/684908.png'
-                      : 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 30],
-                    popupAnchor: [0, -30]
-                  })
-                }).bindPopup(i === 0 ? "Origem" : "Destino");
-              }
-            }).addTo(map);
-
-            // Adicionar evento para capturar erro
-            routingControl.on('routingerror', function(e) {
-              console.error("Erro ao calcular a rota:", e.error);
-              alert('Erro ao calcular a rota. Verifique as coordenadas e tente novamente.');
-            });
-
-            // Ajustar o mapa para mostrar a rota corretamente
-            map.fitBounds(L.latLngBounds([origemCoord, destinoCoord]));
-
-          })
-          .catch(error => {
-            console.error('Erro ao geocodificar destino:', error);
-            alert('Erro ao encontrar destino.');
-          });
-      })
-      .catch(error => {
-        console.error('Erro ao geocodificar origem:', error);
-        alert('Erro ao encontrar origem.');
-      });
   }
-
-  // Restrições de navegação
-  var bounds = [
-    [-19.96967239132942, -43.96451512163013],
-    [-19.972541764414082, -43.962061590405]
-  ];
-  map.setMaxBounds(bounds);
-  map.on('zoomend', () => {
-    if (map.getZoom() < 19) {
-      map.setZoom(19);
-    }
-  });
 </script>
-
 </body>
 </html>
