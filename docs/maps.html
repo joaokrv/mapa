@@ -11,38 +11,84 @@
 </head>
 <body>
 
-<div class="input-box">
-  <!-- Caixa de permissão GPS -->
-  <div id="permissao-gps" class="permissao-box">
-    <p>Para usar sua localização exata no mapa:</p>
-    <button onclick="pedirPermissao()">Ativar GPS</button>
-    <p class="dica">(Funciona melhor em celulares)</p>
-  </div>
-
-  <!-- Inputs de origem e destino -->
-  <div class="input-container">
-    <input type="text" id="origem" placeholder="Digite seu local de origem" list="sugestoes-origem">
-    <datalist id="sugestoes-origem">
-      <option value="📍 Minha Localização"></option>
-    </datalist>
-    <span class="gps-icon" onclick="buscarLocalizacaoAtual('origem')">📍</span>
-  </div>
+<div class="search-container">
+  <!-- Botão para expandir/recolher -->
+  <button id="toggle-search" class="toggle-btn">☰ Busca</button>
   
-  <div class="input-container">
-    <input type="text" id="destino" placeholder="Digite seu destino" list="sugestoes-destino">
-    <datalist id="sugestoes-destino">
-      <option value="📍 Minha Localização"></option>
-    </datalist>
-    <span class="gps-icon" onclick="buscarLocalizacaoAtual('destino')">📍</span>
-  </div>
+  <!-- Caixa de busca (inicialmente recolhida) -->
+  <div class="input-box recolhido" id="search-box">
+    <!-- Caixa de permissão GPS -->
+    <div id="permissao-gps" class="permissao-box">
+      <p>Para usar sua localização exata no mapa:</p>
+      <button onclick="pedirPermissao()">Ativar GPS</button>
+      <p class="dica">(Funciona melhor em celulares)</p>
+    </div>
 
-  <button onclick="calcularRota()" id="calcRota">Calcular Rota</button>
+    <!-- Lista de locais frequentes -->
+    <div class="locais-list">
+      <h4>Locais Frequentes:</h4>
+      <ul>
+        <li onclick="selecionarLocal('Raízes 1', 'origem')">Raízes 1</li>
+        <li onclick="selecionarLocal('Raízes 2', 'origem')">Raízes 2</li>
+        <li onclick="selecionarLocal('Zito', 'origem')">Zito</li>
+        <li onclick="selecionarLocal('Biblioteca', 'origem')">Biblioteca</li>
+        <li onclick="selecionarLocal('Portaria', 'origem')">Portaria</li>
+      </ul>
+    </div>
+
+    <!-- Inputs de origem e destino -->
+    <div class="input-field">
+      <label for="origem">Origem:</label>
+      <div class="input-with-icon">
+        <input type="text" id="origem" placeholder="Digite ou selecione" list="sugestoes-origem">
+        <span class="gps-icon" onclick="buscarLocalizacaoAtual('origem')">📍</span>
+      </div>
+      <datalist id="sugestoes-origem">
+        <option value="📍 Minha Localização"></option>
+      </datalist>
+    </div>
+    
+    <div class="input-field">
+      <label for="destino">Destino:</label>
+      <div class="input-with-icon">
+        <input type="text" id="destino" placeholder="Digite ou selecione" list="sugestoes-destino">
+        <span class="gps-icon" onclick="buscarLocalizacaoAtual('destino')">📍</span>
+      </div>
+      <datalist id="sugestoes-destino">
+        <option value="📍 Minha Localização"></option>
+      </datalist>
+    </div>
+
+    <button onclick="calcularRota()" id="calcRota" class="primary-btn">Calcular Rota</button>
+  </div>
 </div>
 
 <div id="map"></div>
 
 <!-- Scripts -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  // Controle do menu retrátil
+  document.getElementById('toggle-search').addEventListener('click', function() {
+    const searchBox = document.getElementById('search-box');
+    searchBox.classList.toggle('aberto');
+    this.textContent = searchBox.classList.contains('aberto') ? '✕ Ocultar' : '☰ Busca';
+  });
+
+  // Seleção de locais (adicione junto)
+  function selecionarLocal(nome, campo) {
+    document.getElementById(campo).value = nome;
+    const nextField = campo === 'origem' ? 'destino' : 'origem';
+    document.getElementById(nextField).focus();
+    
+    // Fecha o menu em mobile (opcional)
+    if (window.innerWidth < 768) {
+      document.getElementById('search-box').classList.remove('aberto');
+      document.getElementById('toggle-search').textContent = '☰ Busca';
+    }
+  }
+</script>
 
 <script>
   // Inicialização do mapa
@@ -54,9 +100,15 @@
     zoomControl: false
   });
 
-  // Camada de satélite
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '&copy; <a href="https://www.esri.com/en-us/home">Esri</a>'
+  // Camada de Satélite (ESRI ou Google)
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/  MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© Esri'
+  }).addTo(map);
+
+  // Camada de Rotas/Nomes do OSM (transparente)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      opacity: 0.1  // Ajuste a transparência (0.5 = 50%)
   }).addTo(map);
 
   // Ícone da faculdade
@@ -248,12 +300,15 @@
       }
   }
 
-  // Modifique o tratamento de erro:
   navigator.geolocation.getCurrentPosition(
-      (posicao) => { /* ... */ },
+      (posicao) => { /* sucesso */ },
       async (erro) => {
+          const input = document.getElementById('origem'); // Ou use o campo correto
+          input.value = "";
+
+          // Mensagens de erro (código existente)
           if (confirm("Geolocalização precisa falhou. Usar localização aproximada?")) {
-            await localizacaoPorIP(campo);
+            await localizacaoPorIP('origem'); // Passa o campo explicitamente
           }
       }
   );
@@ -262,8 +317,9 @@
   function criarRotaParabola(origem, destino) {
     // Remove rota anterior
     if (currentRoute) {
-      currentRoute.linha.remove();
-      currentRoute.marcadores.forEach(m => m.remove());
+        map.removeLayer(currentRoute.linhaContorno); // Remove contorno
+        map.removeLayer(currentRoute.linhaPrincipal); // Remove linha principal
+        currentRoute.marcadores.forEach(m => map.removeLayer(m));
     }
 
     // Calcula pontos intermediários para uma parábola mais suave
@@ -288,8 +344,8 @@
     // 1° Linha de contorno (fundo branco mais largo)
     const linhaContorno = L.polyline(pontos, {
         color: 'white',
-        weight: 10,    // Espessura maior que a linha principal
-        opacity: 0.9,  // Levemente transparente
+        weight: 9,    // Espessura maior que a linha principal
+        opacity: 0.8,  // Levemente transparente
         lineJoin: 'round'
     }).addTo(map);
     
@@ -312,59 +368,158 @@
 
     // Armazena referências
     currentRoute = {
-      linha: linhaPrincipal,
-      marcadores: [origemMarker, destinoMarker]
+        linhaContorno: linhaContorno, 
+        linhaPrincipal: linhaPrincipal,
+        marcadores: [origemMarker, destinoMarker]
     };
-  }
+    
+    // Ajuste de visualização
+    map.fitBounds(L.latLngBounds(pontos[0], pontos[pontos.length-1]));
+}
 
   // Função principal para cálculo de rota
   async function calcularRota() {
     const btn = document.getElementById('calcRota');
-    const origem = document.getElementById('origem').value;
-    const destino = document.getElementById('destino').value;
+    const origem = document.getElementById('origem').value.trim();
+    const destino = document.getElementById('destino').value.trim();
 
     if (!origem || !destino) {
-      alert('Por favor, preencha ambos os campos');
-      return;
+        alert('Por favor, preencha ambos os campos');
+        return;
     }
 
-    // Feedback visual
     btn.innerHTML = '<span class="spinner">⌛</span> Calculando...';
     btn.disabled = true;
 
-
     try {
-      // Geocodificação
-      const [origemData, destinoData] = await Promise.all([
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(origem)}`).then(r => r.json()),
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destino)}`).then(r => r.json())
-      ]);
+        // Lista de termos mapeados do campus
+        const locaisUniBH = {
+            "raizes 1": [-19.969856109489676, -43.96367690076781],
+            "raízes 1": [-19.969856109489676, -43.96367690076781],
+            "raiz 1": [-19.969856109489676, -43.96367690076781],
+            "raíz 1": [-19.969856109489676, -43.96367690076781],
+            "raizes 2": [-19.96987750032474, -43.963388616338555],
+            "raízes 2": [-19.96987750032474, -43.963388616338555],
+            "raiz 2": [-19.96987750032474, -43.963388616338555],
+            "raíz 2": [-19.96987750032474, -43.963388616338555],
+            "raizes 3": [-19.96989176087983, -43.96317998944897],
+            "raízes 3": [-19.96989176087983, -43.96317998944897],
+            "raiz 3": [-19.96989176087983, -43.96317998944897],
+            "raíz 3": [-19.96989176087983, -43.96317998944897],
+            "raizes 4": [-19.969824023231656, -43.96278170175067],
+            "raízes 4": [-19.969824023231656, -43.96278170175067],
+            "raiz 4": [-19.969824023231656, -43.96278170175067],
+            "raíz 4": [-19.969824023231656, -43.96278170175067],
+            "raizes 5": [-19.970159146048992, -43.96249721053759],
+            "raízes 5": [-19.970159146048992, -43.96249721053759],
+            "raiz 5": [-19.970159146048992, -43.96249721053759],
+            "raíz 5": [-19.970159146048992, -43.96249721053759],
+            "raizes 6": [-19.970419400511535, -43.963289992718025],
+            "raízes 6": [-19.970419400511535, -43.963289992718025],
+            "raiz 6": [-19.970419400511535, -43.963289992718025],
+            "raíz 6": [-19.970419400511535, -43.963289992718025],
+            "raizes 7": [-19.970651133575544, -43.96321412839454],
+            "raízes 7": [-19.970651133575544, -43.96321412839454],
+            "raiz 7": [-19.970651133575544, -43.96321412839454],
+            "raíz 7": [-19.970651133575544, -43.96321412839454],
+            "raizes 8": [-19.970979124407023, -43.96275894245362],
+            "raízes 8": [-19.970979124407023, -43.96275894245362],
+            "raiz 8": [-19.970979124407023, -43.96275894245362],
+            "raíz 8": [-19.970979124407023, -43.96275894245362],
+            "capela": [-19.970651133575544, -43.96266790526544],
+            "capela unibh": [-19.970651133575544, -43.96266790526544],
+            "são judas tadeu": [-19.970651133575544, -43.96266790526544],
+            "sao judas": [-19.970651133575544, -43.96266790526544],
+            "sao judas tadeu": [-19.970651133575544, -43.96266790526544],
+            "biblioteca": [-19.971538846326318, -43.96317619620943],
+            "portaria": [-19.97070507005798, -43.9647914402454],
+            "entrada": [-19.97070507005798, -43.9647914402454],
+            "lanchonete": [-19.970848762471537, -43.96404176283281],
+            "lanchonete Zito": [-19.971775933000565, -43.96389248930361],
+            "zito": [-19.971775933000565, -43.96389248930361],
+            "estacionamento": [-19.970560117051964, -43.963819139495826],
+            "cafeteria": [-19.970837639210675, -43.96361509017953],
+        };
 
-      if (!origemData.length || !destinoData.length) {
-        alert('Local não encontrado');
-        return;
-      }
+        // Fecha o menu após calcular (melhor UX)
+        document.getElementById('search-box').classList.remove('aberto');
+        document.getElementById('toggle-search').textContent = '☰ Busca';
 
-      const origemCoord = L.latLng(origemData[0].lat, origemData[0].lon);
-      const destinoCoord = L.latLng(destinoData[0].lat, destinoData[0].lon);
+        // Verifica primeiro nos locais mapeados
+        const origemLower = origem.toLowerCase();
+        const destinoLower = destino.toLowerCase();
 
-      // Verifica limites
-      if (!bounds.contains(origemCoord) || !bounds.contains(destinoCoord)) {
-        alert('Locais devem estar dentro do campus');
-        return;
-      }
+        if (locaisUniBH[origemLower] && locaisUniBH[destinoLower]) {
+            const origemCoord = L.latLng(locaisUniBH[origemLower]);
+            const destinoCoord = L.latLng(locaisUniBH[destinoLower]);
+            criarRotaParabola(origemCoord, destinoCoord);
+            return;
+        }
 
-      // Cria rota parabólica
-      criarRotaParabola(origemCoord, destinoCoord);
+        // Se não encontrou nos mapeados, usa a API
+        const [origemData, destinoData] = await Promise.all([
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(origem)}+Belo+Horizonte&limit=1`).then(r => r.json()),
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destino)}+Belo+Horizonte&limit=1`).then(r => r.json())
+        ]);
+
+        // Normaliza a busca
+        const origemKey = origem.toLowerCase();
+        const destinoKey = destino.toLowerCase();
+
+        // Verificação simplificada
+        if (!origemData[0] || !destinoData[0]) {
+            alert('Local não encontrado. Tente termos como "Bloco Raízes 1" ou "Portaria Principal"');
+            return;
+        }
+
+        // Verifica locais mapeados
+        const origemCoord = locaisUniBH[origemKey] 
+            ? L.latLng(locaisUniBH[origemKey]) 
+            : await buscarCoordenadasAPI(origem);
+            
+        const destinoCoord = locaisUniBH[destinoKey] 
+            ? L.latLng(locaisUniBH[destinoKey]) 
+            : await buscarCoordenadasAPI(destino);
+
+        // Verificação de limites
+        if (!bounds.contains(origemCoord) || !bounds.contains(destinoCoord)) {
+            const locaisValidos = Object.keys(locaisUniBH).join(', ');
+            alert(`Locais devem estar dentro do campus. Tente: ${locaisValidos}`);
+            return;
+        }
+
+        // Verificação visual dos limites (para debug)
+        console.log('Limites campus:', bounds); // bounds já é o objeto de limites
+        console.log('Origem dentro?', bounds.contains(origemCoord));
+        console.log('Destino dentro?', bounds.contains(destinoCoord));
+
+        if (!bounds.contains(origemCoord) || !bounds.contains(destinoCoord)) {
+            alert('Locais devem estar dentro do campus. Tente: Raízes 1, Raízes 2, Portaria, etc.');
+            return;
+        }
+
+        criarRotaParabola(origemCoord, destinoCoord);
 
     } catch (error) {
       console.error('Erro:', error);
-      alert('Erro ao calcular rota');
+      alert('Erro ao calcular rota: ' + error.message);
     } finally {
       btn.disabled = false;
       btn.textContent = 'Calcular Rota';
     }
   }
+
+  // Função auxiliar para busca na API
+  async function buscarCoordenadasAPI(local) {
+      const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(local)}+UniBH+Belo+Horizonte&limit=1`
+      );
+      const data = await response.json();
+
+      if (!data[0]) throw new Error('Local não encontrado');
+      return L.latLng(data[0].lat, data[0].lon);
+  }
+
 </script>
 </body>
 </html>
