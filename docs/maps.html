@@ -12,8 +12,30 @@
 <body>
 
 <div class="input-box">
-  <input type="text" id="origem" placeholder="Digite seu local de origem">
-  <input type="text" id="destino" placeholder="Digite seu destino">
+  <!-- Caixa de permissão GPS -->
+  <div id="permissao-gps" class="permissao-box">
+    <p>Para usar sua localização exata no mapa:</p>
+    <button onclick="pedirPermissao()">Ativar GPS</button>
+    <p class="dica">(Funciona melhor em celulares)</p>
+  </div>
+
+  <!-- Inputs de origem e destino -->
+  <div class="input-container">
+    <input type="text" id="origem" placeholder="Digite seu local de origem" list="sugestoes-origem">
+    <datalist id="sugestoes-origem">
+      <option value="📍 Minha Localização"></option>
+    </datalist>
+    <span class="gps-icon" onclick="buscarLocalizacaoAtual('origem')">📍</span>
+  </div>
+  
+  <div class="input-container">
+    <input type="text" id="destino" placeholder="Digite seu destino" list="sugestoes-destino">
+    <datalist id="sugestoes-destino">
+      <option value="📍 Minha Localização"></option>
+    </datalist>
+    <span class="gps-icon" onclick="buscarLocalizacaoAtual('destino')">📍</span>
+  </div>
+
   <button onclick="calcularRota()" id="calcRota">Calcular Rota</button>
 </div>
 
@@ -83,17 +105,158 @@
 
   // Função para criar marcador
   function criarMarcador(posicao, tipo) {
-    return L.marker(posicao, {
-      icon: L.icon({
-        iconUrl: tipo === 'origem' 
-          ? 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png'
-          : 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png',
-        iconSize: [50, 50],
-        iconAnchor: [25, 50],  // Ajuste para centralizar no ponto
-        popupAnchor: [0, -50]
-      })
-    }).bindPopup(tipo === 'origem' ? "Origem" : "Destino");
+      const cor = tipo === 'origem' ? '#ff0000' : '#00aa00'; // Vermelho e verde
+      const iconeUrl = tipo === 'origem' 
+        ? 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png' 
+        : 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png';
+
+      return L.marker(posicao, {
+          icon: L.icon({
+              iconUrl: iconeUrl,
+              iconSize: [48, 48],  // Tamanho aumentado
+              iconAnchor: [24, 48], // Centralizado horizontalmente
+              popupAnchor: [0, -48],
+              className: `marcador-${tipo}` // Para estilização CSS
+          }),
+          zIndexOffset: 1000 // Garante que fique acima da linha
+      }).bindPopup(tipo === 'origem' ? "Origem" : "Destino");
   }
+
+  // Verifica se é desktop e mostra o aviso
+  function detectarDispositivo() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.  test(navigator.userAgent);
+    if (!isMobile) {
+      document.getElementById('permissao-gps').style.display = 'block';
+    }
+  }
+
+  // Função para o botão "Ativar GPS"
+  function pedirPermissao() {
+    if (!navigator.geolocation) {
+      alert("Seu navegador não suporta geolocalização.");
+      return;
+    }
+
+    // Testa a permissão (não solicita novamente se já tiver sido concedida)
+    navigator.geolocation.getCurrentPosition(
+      () => {
+        document.getElementById('permissao-gps').style.display = 'none';
+        alert("Permissão concedida! Clique no ícone 📍 para usar sua localização.");
+      },
+      (erro) => {
+        alert("Por favor, permita o acesso à localização nas configurações do seu navegador.");
+      },
+      { maximumAge: 0 }
+    );
+  }
+  
+  // Execute ao carregar a página
+  window.onload = function() {
+    detectarDispositivo();
+  };
+
+  // Função para buscar localização atual
+  function buscarLocalizacaoAtual(campo) {
+      // Esconde o aviso se estiver visível
+    document.getElementById('permissao-gps').style.display = 'none';
+
+    // Verifica se o campo é válido
+    const input = document.getElementById(campo);
+    input.value = "Buscando...";
+
+    if (!navigator.geolocation) {
+      input.value = "";
+      alert("Geolocalização não é suportada pelo seu navegador.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (posicao) => {
+        const lat = posicao.coords.latitude;
+        const lng = posicao.coords.longitude;
+        input.value = `📍 Minha Localização (${lat.toFixed(6)}, ${lng.toFixed(6)})`;
+
+        // Opcional: Mostrar no mapa
+        const localizacaoAtual = L.latLng(lat, lng);
+        if (bounds.contains(localizacaoAtual)) {
+          L.marker(localizacaoAtual, {
+            icon: L.icon({
+              iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
+              iconSize: [30, 30]
+            })
+          }).addTo(map).bindPopup("Você está aqui!").openPopup();
+        }
+      },
+      (erro) => {
+        input.value = "";
+        alert(`Erro ao obter localização: ${erro.message}`);
+      },
+      { 
+        enableHighAccuracy: true,
+        timeout: 10000
+      }
+    );
+
+    navigator.geolocation.getCurrentPosition(
+        (posicao) => { /* sucesso */ },
+        (erro) => {
+            const input = document.getElementById(campo);
+            input.value = "";
+            
+            // Mensagens mais amigáveis:
+            const erros = {
+                "PERMISSION_DENIED": "Por favor, permita o acesso à localização nas configurações do seu navegador.",
+                "POSITION_UNAVAILABLE": "Não foi possível detectar sua localização (sem GPS/Wi-Fi).",
+                "TIMEOUT": "A busca demorou muito. Verifique sua conexão.",
+                "UNKNOWN_ERROR": "Erro inesperado. Tente em um celular ou outro navegador."
+            };
+            
+            alert(erros[erro.code] || `Erro: ${erro.message}`);
+            
+            // Fallback: Sugere inserção manual
+            input.placeholder = "Ex: Raizes 1, Raizes 2, etc.";
+        },
+        { timeout: 8000 } // Reduza o tempo de espera
+    );
+  }
+  
+
+  // Modifique o evento de change para os inputs
+  document.getElementById('origem').addEventListener('change', function() {
+    if (this.value.includes("📍 Minha Localização")) {
+      buscarLocalizacaoAtual('origem');
+    }
+  });
+
+  document.getElementById('destino').addEventListener('change', function() {
+    if (this.value.includes("📍 Minha Localização")) {
+      buscarLocalizacaoAtual('destino');
+    }
+  });
+
+  // Adicione esta função alternativa:
+  async function localizacaoPorIP(campo) {
+      try {
+          const response = await fetch('https://ipapi.co/json/');
+          const data = await response.json();
+
+          document.getElementById(campo).value = 
+              `📍 Localização aproximada (${data.city}, ${data.region})`;
+
+      } catch {
+          alert("Sua localização aproximada não está disponível.");
+      }
+  }
+
+  // Modifique o tratamento de erro:
+  navigator.geolocation.getCurrentPosition(
+      (posicao) => { /* ... */ },
+      async (erro) => {
+          if (confirm("Geolocalização precisa falhou. Usar localização aproximada?")) {
+            await localizacaoPorIP(campo);
+          }
+      }
+  );
 
   // Função para criar rota parabólica melhorada
   function criarRotaParabola(origem, destino) {
@@ -122,12 +285,20 @@
       pontos.push(L.latLng(lat, lng));
     }
 
-    // Cria a linha curva
-    const linhaCurva = L.polyline(pontos, {
-      color: 'blue',
-      weight: 5,
-      opacity: 1,
-      lineJoin: 'round'
+    // 1° Linha de contorno (fundo branco mais largo)
+    const linhaContorno = L.polyline(pontos, {
+        color: 'white',
+        weight: 10,    // Espessura maior que a linha principal
+        opacity: 0.9,  // Levemente transparente
+        lineJoin: 'round'
+    }).addTo(map);
+    
+    // 2° Linha principal (azul)
+    const linhaPrincipal = L.polyline(pontos, {
+        color: '#0066ff',
+        weight: 6,     // Espessura menor
+        opacity: 1,
+        lineJoin: 'round'
     }).addTo(map);
 
     // Cria marcadores (agora posicionados exatamente nos pontos finais)
@@ -141,7 +312,7 @@
 
     // Armazena referências
     currentRoute = {
-      linha: linhaCurva,
+      linha: linhaPrincipal,
       marcadores: [origemMarker, destinoMarker]
     };
   }

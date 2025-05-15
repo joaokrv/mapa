@@ -32,19 +32,83 @@ body, html {
   max-width: 400px;
 }
 
-/* Containers de input com posição relativa */
+/* Estilo para os containers de input */
 .input-container {
   position: relative;
   margin-bottom: 10px;
 }
 
-/* Estilo dos inputs */
+/* Estilo para o ícone de GPS */
+.gps-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 2px 5px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.gps-icon:hover {
+  background: #1a56db;
+  color: white;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Ajuste para o input com ícone */
 .input-box input {
   width: 100%;
-  padding: 10px;
+  padding: 10px 35px 10px 10px; /* Mais padding à direita para o ícone */
   font-size: 16px;
   border-radius: 4px;
   border: 1px solid #ccc;
+}
+
+/* Estilo para as opções do datalist */
+datalist option {
+  padding: 5px;
+}
+
+/* Estilo para a caixa de permissão */
+.permissao-box {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  border: 1px solid #e1e4e8;
+  display: none; /* Inicialmente oculto */
+}
+
+.permissao-box p {
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.permissao-box button {
+  background-color: #1a56db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.permissao-box button:hover {
+  background-color: #143ba9;
+}
+
+.dica {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
 }
 
 /* Estilo do botão "Calcular Rota" */
@@ -73,6 +137,15 @@ body, html {
   transform: none;
 }
 
+/* Estilo dos marcadores */
+.marcador-origem {
+    filter: drop-shadow(0 0 3px rgb(255, 255, 255));
+}
+
+.marcador-destino {
+    filter: drop-shadow(0 0 3px rgb(255, 255, 255));
+}
+
 /* Spinner de carregamento */
 .spinner {
   display: inline-block;
@@ -83,51 +156,6 @@ body, html {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-/* Estilização do painel de rotas */
-.leaflet-routing-container.leaflet-bar.leaflet-control {
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  font-family: 'Lucida Sans', sans-serif;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.leaflet-routing-container.leaflet-bar.leaflet-control td {
-  padding-right: 15px;
-  line-height: 2;
-}
-
-/* Links no painel de rotas */
-.leaflet-routing-container a {
-  color: #a134f0;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.leaflet-routing-container a:hover {
-  text-decoration: underline;
-}
-
-/* Botões de controle no painel */
-.leaflet-routing-container .leaflet-routing-collapse-btn,
-.leaflet-routing-container .leaflet-routing-alt .leaflet-routing-alt-btn {
-  background-color: #1a56db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.leaflet-routing-container .leaflet-routing-collapse-btn:hover,
-.leaflet-routing-container .leaflet-routing-alt .leaflet-routing-alt-btn:hover {
-  background-color: #143ba9;
 }
 
 /* Footer (se necessário) */
