@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="/styles/styleMaps.css">
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <!-- Leaflet Routing Machine CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 </head>
 <body>
 
@@ -23,7 +21,6 @@
 
 <!-- Scripts -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <script>
   // Inicialização do mapa
@@ -52,8 +49,7 @@
     .bindPopup('Faculdade UniBH')
     .openPopup();
 
-  var routingControl; // Guarda a rota atual
-  var currentStraightLine = null; // Guarda a linha reta atual
+  var currentRoute = null; // Guarda a rota atual
 
   // Limites do campus UniBH
   var bounds = L.latLngBounds(
@@ -93,100 +89,71 @@
           ? 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png'
           : 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png',
         iconSize: [50, 50],
-        iconAnchor: [15, 30],
-        popupAnchor: [0, -30]
+        iconAnchor: [25, 50],  // Ajuste para centralizar no ponto
+        popupAnchor: [0, -50]
       })
     }).bindPopup(tipo === 'origem' ? "Origem" : "Destino");
   }
 
-  // Função para criar rota em linha reta
-  function criarRotaLinhaReta(origem, destino) {
+  // Função para criar rota parabólica melhorada
+  function criarRotaParabola(origem, destino) {
     // Remove rota anterior
-    if (routingControl) {
-      map.removeControl(routingControl);
-      routingControl = null;
-    }
-    
-    // Remove linha reta anterior se existir
-    if (currentStraightLine) {
-      currentStraightLine.linha.remove();
-      currentStraightLine.marcadores.forEach(m => m.remove());
+    if (currentRoute) {
+      currentRoute.linha.remove();
+      currentRoute.marcadores.forEach(m => m.remove());
     }
 
-    // Cria linha reta
-    const linhaReta = L.polyline([origem, destino], {
-      color: '#FFA500',
+    // Calcula pontos intermediários para uma parábola mais suave
+    const pontos = [];
+    const steps = 20; // Número de pontos intermediários
+    const alturaMaxima = 0.0002; // Altura da parábola (ajuste conforme necessário)
+
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      // Interpolação linear para longitude
+      const lng = origem.lng + t * (destino.lng - origem.lng);
+      
+      // Interpolação linear para latitude base
+      const latBase = origem.lat + t * (destino.lat - origem.lat);
+      
+      // Adiciona componente parabólico (altura máxima no meio do caminho)
+      const lat = latBase + alturaMaxima * Math.sin(Math.PI * t);
+      
+      pontos.push(L.latLng(lat, lng));
+    }
+
+    // Cria a linha curva
+    const linhaCurva = L.polyline(pontos, {
+      color: 'blue',
       weight: 5,
-      dashArray: '10, 10',
-      opacity: 0.8
+      opacity: 1,
+      lineJoin: 'round'
     }).addTo(map);
 
-    // Adiciona marcadores
-    const origemMarker = criarMarcador(origem, 'origem');
-    const destinoMarker = criarMarcador(destino, 'destino');
-    
-    origemMarker.addTo(map);
-    destinoMarker.addTo(map);
+    // Cria marcadores (agora posicionados exatamente nos pontos finais)
+    const origemMarker = criarMarcador(pontos[0], 'origem').addTo(map);
+    const destinoMarker = criarMarcador(pontos[pontos.length-1], 'destino').addTo(map);
 
-    // Ajusta a visualização
-    map.fitBounds(L.latLngBounds(origem, destino));
+    // Ajusta visualização para mostrar toda a rota
+    map.fitBounds(L.latLngBounds(pontos[0], pontos[pontos.length-1]), {
+      padding: [50, 50] // Adiciona um padding para melhor visualização
+    });
 
-    // Guarda referência para remoção
-    currentStraightLine = {
-      linha: linhaReta,
+    // Armazena referências
+    currentRoute = {
+      linha: linhaCurva,
       marcadores: [origemMarker, destinoMarker]
     };
   }
 
-  // Função para criar rota a pé usando OSRM
-  function criarRotaPe(origem, destino) {
-    return new Promise((resolve, reject) => {
-      // Remove linha reta anterior se existir
-      if (currentStraightLine) {
-        currentStraightLine.linha.remove();
-        currentStraightLine.marcadores.forEach(m => m.remove());
-        currentStraightLine = null;
-      }
-
-      // Remove rota anterior
-      if (routingControl) {
-        map.removeControl(routingControl);
-      }
-
-      routingControl = L.Routing.control({
-        waypoints: [origem, destino],
-        router: L.Routing.osrmv1({
-          serviceUrl: 'https://router.project-osrm.org/route/v1',
-          profile: 'foot'
-        }),
-        addWaypoints: false,
-        createMarker: function(i, waypoint, n) {
-          return criarMarcador(waypoint.latLng, i === 0 ? 'origem' : 'destino');
-        }
-      }).addTo(map);
-
-      routingControl.on('routesfound', function(e) {
-        resolve(e.routes[0]);
-      });
-
-      routingControl.on('routingerror', function(e) {
-        reject(e.error);
-      });
-    });
-  }
-
   // Função principal para cálculo de rota
   async function calcularRota() {
-    console.log('Iniciando cálculo de rota...');
     const btn = document.getElementById('calcRota');
     const origem = document.getElementById('origem').value;
     const destino = document.getElementById('destino').value;
 
-    console.log(`Origem: ${origem}, Destino: ${destino}`);
-
     if (!origem || !destino) {
-      console.warn('Campos de origem/destino vazios');
-      alert('Por favor, preencha ambos os campos de origem e destino.');
+      alert('Por favor, preencha ambos os campos');
       return;
     }
 
@@ -194,63 +161,37 @@
     btn.innerHTML = '<span class="spinner">⌛</span> Calculando...';
     btn.disabled = true;
 
+
     try {
-      // Geocodificar origem
-      console.log(`Geocodificando origem: ${origem}`);
-      const origemData = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(origem)}`)
-        .then(r => r.json());
-      
-      console.log('Dados da origem:', origemData);
+      // Geocodificação
+      const [origemData, destinoData] = await Promise.all([
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(origem)}`).then(r => r.json()),
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destino)}`).then(r => r.json())
+      ]);
 
-      if (origemData.length === 0) {
-        alert('Origem não encontrada. Tente novamente.');
-        return;
-      }
-      const origemCoord = L.latLng(parseFloat(origemData[0].lat), parseFloat(origemData[0].lon));
-      console.log(`Coordenadas da origem: ${origemCoord}`);
-
-      // Geocodificar destino
-      console.log(`Geocodificando destino: ${destino}`);
-      const destinoData = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destino)}`)
-        .then(r => r.json());
-      
-      console.log('Dados do destino:', destinoData);
-      
-      if (destinoData.length === 0) {
-        alert('Destino não encontrado. Tente novamente.');
-        return;
-      }
-      const destinoCoord = L.latLng(parseFloat(destinoData[0].lat), parseFloat(destinoData[0].lon));
-      console.log(`Coordenadas do destino: ${destinoCoord}`);
-
-      // Verifica se as coordenadas estão dentro do campus
-      const origemDentro = bounds.contains(origemCoord);
-      const destinoDentro = bounds.contains(destinoCoord);
-      console.log(`Verificação de limites - Origem: ${origemDentro}, Destino: ${destinoDentro}`);
-
-      if (!origemDentro || !destinoDentro) {
-        alert('Um ou ambos os locais estão fora do campus UniBH. Por favor, insira locais dentro do campus.');
+      if (!origemData.length || !destinoData.length) {
+        alert('Local não encontrado');
         return;
       }
 
-      // Primeiro tentamos calcular a rota a pé
-      try {
-        console.log('Tentando calcular rota a pé...');
-        await criarRotaPe(origemCoord, destinoCoord);
-        console.log('Rota a pé calculada com sucesso');
-      } catch (error) {
-        console.warn('Erro ao calcular rota a pé, usando linha reta:', error);
-        criarRotaLinhaReta(origemCoord, destinoCoord);
-        alert('Rota detalhada não disponível. Mostrando caminho em linha reta.');
+      const origemCoord = L.latLng(origemData[0].lat, origemData[0].lon);
+      const destinoCoord = L.latLng(destinoData[0].lat, destinoData[0].lon);
+
+      // Verifica limites
+      if (!bounds.contains(origemCoord) || !bounds.contains(destinoCoord)) {
+        alert('Locais devem estar dentro do campus');
+        return;
       }
+
+      // Cria rota parabólica
+      criarRotaParabola(origemCoord, destinoCoord);
 
     } catch (error) {
-      console.error('Erro no cálculo da rota:', error);
-      alert('Ocorreu um erro ao calcular a rota. Tente novamente.');
+      console.error('Erro:', error);
+      alert('Erro ao calcular rota');
     } finally {
-      console.log('Finalizando processo de cálculo de rota');
-      btn.textContent = 'Calcular Rota';
       btn.disabled = false;
+      btn.textContent = 'Calcular Rota';
     }
   }
 </script>
