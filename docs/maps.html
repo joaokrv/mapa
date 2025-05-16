@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maps UniBH</title>
-  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="/styles/styleMaps.css">
+  <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../styles/styleMaps.css">
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
@@ -20,7 +20,7 @@
     <!-- Caixa de permissão GPS -->
     <div id="permissao-gps" class="permissao-box">
       <p>Para usar sua localização exata no mapa:</p>
-      <button onclick="pedirPermissao()">Ativar GPS</button>
+      <button id="ativar-gps">Ativar GPS</button>
       <p class="dica">(Funciona melhor em celulares)</p>
     </div>
 
@@ -28,11 +28,11 @@
     <div class="locais-list">
       <h4>Locais Frequentes:</h4>
       <ul>
-        <li onclick="selecionarLocal('Raízes 1', 'origem')">Raízes 1</li>
-        <li onclick="selecionarLocal('Raízes 2', 'origem')">Raízes 2</li>
-        <li onclick="selecionarLocal('Zito', 'origem')">Zito</li>
-        <li onclick="selecionarLocal('Biblioteca', 'origem')">Biblioteca</li>
-        <li onclick="selecionarLocal('Portaria', 'origem')">Portaria</li>
+        <li data-local="Raízes 1" data-campo="origem">Raízes 1</li>
+        <li data-local="Raízes 2" data-campo="origem">Raízes 2</li>
+        <li data-local="Zito" data-campo="origem">Zito</li>
+        <li data-local="Biblioteca" data-campo="origem">Biblioteca</li>
+        <li data-local="Portaria" data-campo="origem">Portaria</li>
       </ul>
     </div>
 
@@ -41,7 +41,7 @@
       <label for="origem">Origem:</label>
       <div class="input-with-icon">
         <input type="text" id="origem" placeholder="Digite ou selecione" list="sugestoes-origem">
-        <span class="gps-icon" onclick="buscarLocalizacaoAtual('origem')">📍</span>
+        <span class="gps-icon" data-campo="origem">📍</span>
       </div>
       <datalist id="sugestoes-origem">
         <option value="📍 Minha Localização"></option>
@@ -52,14 +52,14 @@
       <label for="destino">Destino:</label>
       <div class="input-with-icon">
         <input type="text" id="destino" placeholder="Digite ou selecione" list="sugestoes-destino">
-        <span class="gps-icon" onclick="buscarLocalizacaoAtual('destino')">📍</span>
+        <span class="gps-icon" data-campo="destino">📍</span>
       </div>
       <datalist id="sugestoes-destino">
         <option value="📍 Minha Localização"></option>
       </datalist>
     </div>
 
-    <button onclick="calcularRota()" id="calcRota" class="primary-btn">Calcular Rota</button>
+    <button id="calcRota" class="primary-btn">Calcular Rota</button>
   </div>
 </div>
 
@@ -67,459 +67,7 @@
 
 <!-- Scripts -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="../scripts/maps.js" type="module"></script>
 
-<script>
-  // Controle do menu retrátil
-  document.getElementById('toggle-search').addEventListener('click', function() {
-    const searchBox = document.getElementById('search-box');
-    searchBox.classList.toggle('aberto');
-    this.textContent = searchBox.classList.contains('aberto') ? '✕ Ocultar' : '☰ Busca';
-  });
-
-  // Seleção de locais (adicione junto)
-  function selecionarLocal(nome, campo) {
-    document.getElementById(campo).value = nome;
-    const nextField = campo === 'origem' ? 'destino' : 'origem';
-    document.getElementById(nextField).focus();
-    
-    // Fecha o menu em mobile (opcional)
-    if (window.innerWidth < 768) {
-      document.getElementById('search-box').classList.remove('aberto');
-      document.getElementById('toggle-search').textContent = '☰ Busca';
-    }
-  }
-</script>
-
-<script>
-  // Inicialização do mapa
-  var map = L.map('map', {
-    center: [-19.9716538355151, -43.96324375462156],
-    zoom: 20,
-    zoomMax: 20,
-    zoomMin: 19,
-    zoomControl: false
-  });
-
-  // Camada de Satélite (ESRI ou Google)
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/  MapServer/tile/{z}/{y}/{x}', {
-      attribution: '© Esri'
-  }).addTo(map);
-
-  // Camada de Rotas/Nomes do OSM (transparente)
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap',
-      opacity: 0.1  // Ajuste a transparência (0.5 = 50%)
-  }).addTo(map);
-
-  // Ícone da faculdade
-  var studyIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2231/2231549.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40]
-  });
-
-  L.marker([-19.9716538355151, -43.96324375462156], { icon: studyIcon }).addTo(map)
-    .bindPopup('Faculdade UniBH')
-    .openPopup();
-
-  var currentRoute = null; // Guarda a rota atual
-
-  // Limites do campus UniBH
-  var bounds = L.latLngBounds(
-    L.latLng(-19.96967239132942, -43.96451512163013),
-    L.latLng(-19.972541764414082, -43.962061590405)
-  );
-
-  // Função para ajustar o mapa dentro dos limites
-  function ajustarMapa() {
-    if (!map.getBounds().intersects(bounds)) {
-      map.fitBounds(bounds);
-    }
-    if (map.getZoom() < 19) map.setZoom(19);
-  }
-
-  // Configurações de restrição
-  map.setMaxBounds(bounds);
-  map.on('drag', ajustarMapa);
-  map.on('zoomend', ajustarMapa);
-
-  // Bloqueia zoom com scroll fora dos bounds
-  map.on('mouseout', () => {
-    if (!map.getBounds().intersects(bounds)) {
-      map.scrollWheelZoom.disable();
-    }
-  });
-
-  map.on('mouseover', () => {
-    map.scrollWheelZoom.enable();
-  });
-
-  // Função para criar marcador
-  function criarMarcador(posicao, tipo) {
-      const cor = tipo === 'origem' ? '#ff0000' : '#00aa00'; // Vermelho e verde
-      const iconeUrl = tipo === 'origem' 
-        ? 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png' 
-        : 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png';
-
-      return L.marker(posicao, {
-          icon: L.icon({
-              iconUrl: iconeUrl,
-              iconSize: [48, 48],  // Tamanho aumentado
-              iconAnchor: [24, 48], // Centralizado horizontalmente
-              popupAnchor: [0, -48],
-              className: `marcador-${tipo}` // Para estilização CSS
-          }),
-          zIndexOffset: 1000 // Garante que fique acima da linha
-      }).bindPopup(tipo === 'origem' ? "Origem" : "Destino");
-  }
-
-  // Verifica se é desktop e mostra o aviso
-  function detectarDispositivo() {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.  test(navigator.userAgent);
-    if (!isMobile) {
-      document.getElementById('permissao-gps').style.display = 'block';
-    }
-  }
-
-  // Função para o botão "Ativar GPS"
-  function pedirPermissao() {
-    if (!navigator.geolocation) {
-      alert("Seu navegador não suporta geolocalização.");
-      return;
-    }
-
-    // Testa a permissão (não solicita novamente se já tiver sido concedida)
-    navigator.geolocation.getCurrentPosition(
-      () => {
-        document.getElementById('permissao-gps').style.display = 'none';
-        alert("Permissão concedida! Clique no ícone 📍 para usar sua localização.");
-      },
-      (erro) => {
-        alert("Por favor, permita o acesso à localização nas configurações do seu navegador.");
-      },
-      { maximumAge: 0 }
-    );
-  }
-  
-  // Execute ao carregar a página
-  window.onload = function() {
-    detectarDispositivo();
-  };
-
-  // Função para buscar localização atual
-  function buscarLocalizacaoAtual(campo) {
-      // Esconde o aviso se estiver visível
-    document.getElementById('permissao-gps').style.display = 'none';
-
-    // Verifica se o campo é válido
-    const input = document.getElementById(campo);
-    input.value = "Buscando...";
-
-    if (!navigator.geolocation) {
-      input.value = "";
-      alert("Geolocalização não é suportada pelo seu navegador.");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (posicao) => {
-        const lat = posicao.coords.latitude;
-        const lng = posicao.coords.longitude;
-        input.value = `📍 Minha Localização (${lat.toFixed(6)}, ${lng.toFixed(6)})`;
-
-        // Opcional: Mostrar no mapa
-        const localizacaoAtual = L.latLng(lat, lng);
-        if (bounds.contains(localizacaoAtual)) {
-          L.marker(localizacaoAtual, {
-            icon: L.icon({
-              iconUrl: 'https://cdn-icons-png.flaticon.com/512/535/535137.png',
-              iconSize: [30, 30]
-            })
-          }).addTo(map).bindPopup("Você está aqui!").openPopup();
-        }
-      },
-      (erro) => {
-        input.value = "";
-        alert(`Erro ao obter localização: ${erro.message}`);
-      },
-      { 
-        enableHighAccuracy: true,
-        timeout: 10000
-      }
-    );
-
-    navigator.geolocation.getCurrentPosition(
-        (posicao) => { /* sucesso */ },
-        (erro) => {
-            const input = document.getElementById(campo);
-            input.value = "";
-            
-            // Mensagens mais amigáveis:
-            const erros = {
-                "PERMISSION_DENIED": "Por favor, permita o acesso à localização nas configurações do seu navegador.",
-                "POSITION_UNAVAILABLE": "Não foi possível detectar sua localização (sem GPS/Wi-Fi).",
-                "TIMEOUT": "A busca demorou muito. Verifique sua conexão.",
-                "UNKNOWN_ERROR": "Erro inesperado. Tente em um celular ou outro navegador."
-            };
-            
-            alert(erros[erro.code] || `Erro: ${erro.message}`);
-            
-            // Fallback: Sugere inserção manual
-            input.placeholder = "Ex: Raizes 1, Raizes 2, etc.";
-        },
-        { timeout: 8000 } // Reduza o tempo de espera
-    );
-  }
-  
-
-  // Modifique o evento de change para os inputs
-  document.getElementById('origem').addEventListener('change', function() {
-    if (this.value.includes("📍 Minha Localização")) {
-      buscarLocalizacaoAtual('origem');
-    }
-  });
-
-  document.getElementById('destino').addEventListener('change', function() {
-    if (this.value.includes("📍 Minha Localização")) {
-      buscarLocalizacaoAtual('destino');
-    }
-  });
-
-  // Adicione esta função alternativa:
-  async function localizacaoPorIP(campo) {
-      try {
-          const response = await fetch('https://ipapi.co/json/');
-          const data = await response.json();
-
-          document.getElementById(campo).value = 
-              `📍 Localização aproximada (${data.city}, ${data.region})`;
-
-      } catch {
-          alert("Sua localização aproximada não está disponível.");
-      }
-  }
-
-  navigator.geolocation.getCurrentPosition(
-      (posicao) => { /* sucesso */ },
-      async (erro) => {
-          const input = document.getElementById('origem'); // Ou use o campo correto
-          input.value = "";
-
-          // Mensagens de erro (código existente)
-          if (confirm("Geolocalização precisa falhou. Usar localização aproximada?")) {
-            await localizacaoPorIP('origem'); // Passa o campo explicitamente
-          }
-      }
-  );
-
-  // Função para criar rota parabólica melhorada
-  function criarRotaParabola(origem, destino) {
-    // Remove rota anterior
-    if (currentRoute) {
-        map.removeLayer(currentRoute.linhaContorno); // Remove contorno
-        map.removeLayer(currentRoute.linhaPrincipal); // Remove linha principal
-        currentRoute.marcadores.forEach(m => map.removeLayer(m));
-    }
-
-    // Calcula pontos intermediários para uma parábola mais suave
-    const pontos = [];
-    const steps = 20; // Número de pontos intermediários
-    const alturaMaxima = 0.0002; // Altura da parábola (ajuste conforme necessário)
-
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      // Interpolação linear para longitude
-      const lng = origem.lng + t * (destino.lng - origem.lng);
-      
-      // Interpolação linear para latitude base
-      const latBase = origem.lat + t * (destino.lat - origem.lat);
-      
-      // Adiciona componente parabólico (altura máxima no meio do caminho)
-      const lat = latBase + alturaMaxima * Math.sin(Math.PI * t);
-      
-      pontos.push(L.latLng(lat, lng));
-    }
-
-    // 1° Linha de contorno (fundo branco mais largo)
-    const linhaContorno = L.polyline(pontos, {
-        color: 'white',
-        weight: 9,    // Espessura maior que a linha principal
-        opacity: 0.8,  // Levemente transparente
-        lineJoin: 'round'
-    }).addTo(map);
-    
-    // 2° Linha principal (azul)
-    const linhaPrincipal = L.polyline(pontos, {
-        color: '#0066ff',
-        weight: 6,     // Espessura menor
-        opacity: 1,
-        lineJoin: 'round'
-    }).addTo(map);
-
-    // Cria marcadores (agora posicionados exatamente nos pontos finais)
-    const origemMarker = criarMarcador(pontos[0], 'origem').addTo(map);
-    const destinoMarker = criarMarcador(pontos[pontos.length-1], 'destino').addTo(map);
-
-    // Ajusta visualização para mostrar toda a rota
-    map.fitBounds(L.latLngBounds(pontos[0], pontos[pontos.length-1]), {
-      padding: [50, 50] // Adiciona um padding para melhor visualização
-    });
-
-    // Armazena referências
-    currentRoute = {
-        linhaContorno: linhaContorno, 
-        linhaPrincipal: linhaPrincipal,
-        marcadores: [origemMarker, destinoMarker]
-    };
-    
-    // Ajuste de visualização
-    map.fitBounds(L.latLngBounds(pontos[0], pontos[pontos.length-1]));
-}
-
-  // Função principal para cálculo de rota
-  async function calcularRota() {
-    const btn = document.getElementById('calcRota');
-    const origem = document.getElementById('origem').value.trim();
-    const destino = document.getElementById('destino').value.trim();
-
-    if (!origem || !destino) {
-        alert('Por favor, preencha ambos os campos');
-        return;
-    }
-
-    btn.innerHTML = '<span class="spinner">⌛</span> Calculando...';
-    btn.disabled = true;
-
-    try {
-        // Lista de termos mapeados do campus
-        const locaisUniBH = {
-            "raizes 1": [-19.969856109489676, -43.96367690076781],
-            "raízes 1": [-19.969856109489676, -43.96367690076781],
-            "raiz 1": [-19.969856109489676, -43.96367690076781],
-            "raíz 1": [-19.969856109489676, -43.96367690076781],
-            "raizes 2": [-19.96987750032474, -43.963388616338555],
-            "raízes 2": [-19.96987750032474, -43.963388616338555],
-            "raiz 2": [-19.96987750032474, -43.963388616338555],
-            "raíz 2": [-19.96987750032474, -43.963388616338555],
-            "raizes 3": [-19.96989176087983, -43.96317998944897],
-            "raízes 3": [-19.96989176087983, -43.96317998944897],
-            "raiz 3": [-19.96989176087983, -43.96317998944897],
-            "raíz 3": [-19.96989176087983, -43.96317998944897],
-            "raizes 4": [-19.969824023231656, -43.96278170175067],
-            "raízes 4": [-19.969824023231656, -43.96278170175067],
-            "raiz 4": [-19.969824023231656, -43.96278170175067],
-            "raíz 4": [-19.969824023231656, -43.96278170175067],
-            "raizes 5": [-19.970159146048992, -43.96249721053759],
-            "raízes 5": [-19.970159146048992, -43.96249721053759],
-            "raiz 5": [-19.970159146048992, -43.96249721053759],
-            "raíz 5": [-19.970159146048992, -43.96249721053759],
-            "raizes 6": [-19.970419400511535, -43.963289992718025],
-            "raízes 6": [-19.970419400511535, -43.963289992718025],
-            "raiz 6": [-19.970419400511535, -43.963289992718025],
-            "raíz 6": [-19.970419400511535, -43.963289992718025],
-            "raizes 7": [-19.970651133575544, -43.96321412839454],
-            "raízes 7": [-19.970651133575544, -43.96321412839454],
-            "raiz 7": [-19.970651133575544, -43.96321412839454],
-            "raíz 7": [-19.970651133575544, -43.96321412839454],
-            "raizes 8": [-19.970979124407023, -43.96275894245362],
-            "raízes 8": [-19.970979124407023, -43.96275894245362],
-            "raiz 8": [-19.970979124407023, -43.96275894245362],
-            "raíz 8": [-19.970979124407023, -43.96275894245362],
-            "capela": [-19.970651133575544, -43.96266790526544],
-            "capela unibh": [-19.970651133575544, -43.96266790526544],
-            "são judas tadeu": [-19.970651133575544, -43.96266790526544],
-            "sao judas": [-19.970651133575544, -43.96266790526544],
-            "sao judas tadeu": [-19.970651133575544, -43.96266790526544],
-            "biblioteca": [-19.971538846326318, -43.96317619620943],
-            "portaria": [-19.97070507005798, -43.9647914402454],
-            "entrada": [-19.97070507005798, -43.9647914402454],
-            "lanchonete": [-19.970848762471537, -43.96404176283281],
-            "lanchonete Zito": [-19.971775933000565, -43.96389248930361],
-            "zito": [-19.971775933000565, -43.96389248930361],
-            "estacionamento": [-19.970560117051964, -43.963819139495826],
-            "cafeteria": [-19.970837639210675, -43.96361509017953],
-        };
-
-        // Fecha o menu após calcular (melhor UX)
-        document.getElementById('search-box').classList.remove('aberto');
-        document.getElementById('toggle-search').textContent = '☰ Busca';
-
-        // Verifica primeiro nos locais mapeados
-        const origemLower = origem.toLowerCase();
-        const destinoLower = destino.toLowerCase();
-
-        if (locaisUniBH[origemLower] && locaisUniBH[destinoLower]) {
-            const origemCoord = L.latLng(locaisUniBH[origemLower]);
-            const destinoCoord = L.latLng(locaisUniBH[destinoLower]);
-            criarRotaParabola(origemCoord, destinoCoord);
-            return;
-        }
-
-        // Se não encontrou nos mapeados, usa a API
-        const [origemData, destinoData] = await Promise.all([
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(origem)}+Belo+Horizonte&limit=1`).then(r => r.json()),
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destino)}+Belo+Horizonte&limit=1`).then(r => r.json())
-        ]);
-
-        // Normaliza a busca
-        const origemKey = origem.toLowerCase();
-        const destinoKey = destino.toLowerCase();
-
-        // Verificação simplificada
-        if (!origemData[0] || !destinoData[0]) {
-            alert('Local não encontrado. Tente termos como "Bloco Raízes 1" ou "Portaria Principal"');
-            return;
-        }
-
-        // Verifica locais mapeados
-        const origemCoord = locaisUniBH[origemKey] 
-            ? L.latLng(locaisUniBH[origemKey]) 
-            : await buscarCoordenadasAPI(origem);
-            
-        const destinoCoord = locaisUniBH[destinoKey] 
-            ? L.latLng(locaisUniBH[destinoKey]) 
-            : await buscarCoordenadasAPI(destino);
-
-        // Verificação de limites
-        if (!bounds.contains(origemCoord) || !bounds.contains(destinoCoord)) {
-            const locaisValidos = Object.keys(locaisUniBH).join(', ');
-            alert(`Locais devem estar dentro do campus. Tente: ${locaisValidos}`);
-            return;
-        }
-
-        // Verificação visual dos limites (para debug)
-        console.log('Limites campus:', bounds); // bounds já é o objeto de limites
-        console.log('Origem dentro?', bounds.contains(origemCoord));
-        console.log('Destino dentro?', bounds.contains(destinoCoord));
-
-        if (!bounds.contains(origemCoord) || !bounds.contains(destinoCoord)) {
-            alert('Locais devem estar dentro do campus. Tente: Raízes 1, Raízes 2, Portaria, etc.');
-            return;
-        }
-
-        criarRotaParabola(origemCoord, destinoCoord);
-
-    } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao calcular rota: ' + error.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Calcular Rota';
-    }
-  }
-
-  // Função auxiliar para busca na API
-  async function buscarCoordenadasAPI(local) {
-      const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(local)}+UniBH+Belo+Horizonte&limit=1`
-      );
-      const data = await response.json();
-
-      if (!data[0]) throw new Error('Local não encontrado');
-      return L.latLng(data[0].lat, data[0].lon);
-  }
-
-</script>
 </body>
 </html>
