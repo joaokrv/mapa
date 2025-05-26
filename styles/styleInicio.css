@@ -29,6 +29,8 @@ body {
   margin-bottom: 1px
 }
 
+
+
 h1 {
   color: #002D62;
   font-size: 22px;
@@ -40,21 +42,54 @@ p {
   margin-bottom: 10px;
 }
 
-button {
-  margin-top: 20px;
+/* Estilo base para ambos */
+.botoes button,
+.botao-ajuda {
+  margin-top: 0;
   background-color: #00B3B3;
   color: white;
   border: none;
   padding: 12px 30px;
   font-size: 16px;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
-button:hover {
+
+/* Hover igual */
+.botoes button:hover,
+.botao-ajuda:hover {
   background-color: #009999;
 }
+
+/* Container dos botões */
+.botoes {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .botoes {
+    flex-direction: column;
+  }
+
+  .botoes button,
+  .botao-ajuda {
+    width: 100%;
+  }
+}
+
 
 @media (max-width: 768px) {
   .container {
@@ -69,11 +104,16 @@ button:hover {
     font-size: 15px;
   }
 
-  button {
+  .botoes {
+    flex-direction: column;
+  }
+
+  .botao-ajuda,
+  .botoes button {
     width: 100%;
-    padding: 14px 0;
   }
 }
+
 
 @media (max-width: 480px) {
   .logo {
@@ -88,7 +128,4 @@ button:hover {
     font-size: 14px;
   }
 
-  button {
-    font-size: 15px;
-  }
 }
