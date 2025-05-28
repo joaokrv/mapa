@@ -49,24 +49,6 @@ function initMap() {
       map.scrollWheelZoom.disable(),
   )
   map.on('mouseover', () => map.scrollWheelZoom.enable())
-
-  // Adiciona marcador da faculdade
-  addUniversityMarker()
-}
-
-// Adiciona marcador da faculdade
-function addUniversityMarker() {
-  const studyIcon = L.icon({
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2231/2231549.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40],
-  })
-
-  L.marker(MAP_CONFIG.center, { icon: studyIcon })
-    .addTo(map)
-    .bindPopup('Faculdade UniBH')
-    .openPopup()
 }
 
 // Ajusta o mapa para manter os limites

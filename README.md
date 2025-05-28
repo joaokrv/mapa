@@ -46,11 +46,57 @@ Este projeto está sendo desenvolvido em equipe por alunos do curso de **Engenha
 
 A ideia original do projeto **Mapa Faculdade** foi concebida por **Breno**, colega de turma de Engenharia de Software.
 
+## 🔧 Configuração e Execução
+
+### Backend
+
+Para que o sistema de mapeamento funcione corretamente, é necessário iniciar o servidor backend que fornece as APIs de rotas e localização:
+
+1. **Instale as dependências:**
+   ```bash
+   cd backend
+   npm install
+   ```
+2. **Inicie o servidor**
+    ```bash
+    node server.js
+    ```
+3. **Verificação:**
+    - O servidor estará rodando em: http://localhost:3000
+    - Você verá a mensagem: "Servidor rodando na porta 3000"
+    - As seguintes rotas estarão disponíveis:
+        - `GET /api/locais` - Lista todos os locais disponíveis
+        - `GET /api/buscar-local?local=NOME_DO_LOCAL` - Busca coordenadas de um local específico
+        - `POST /api/rota` - Calcula rota entre origem e destino
+
+### Frontend
+
+Após iniciar o backend, você pode acessar o frontend de duas maneiras:
+
+1. **Usando Live Server (VS Code):**
+    - Instale a extensão "Live Server" no VS Code
+    - Clique com o botão direito no arquivo frontend/docs/index.html
+    - Selecione "Open with Live Server"
+
+2. **Usando HTTP Server:**
+    ```bash
+    cd frontend
+    npx http-server
+    ```
+
+    - Acesse: `http://localhost:8080/docs/index.html`
+
+### ⚠ Importante
+- O backend deve estar rodando para que as funcionalidades de rota e busca funcionem
+- O frontend deve ser acessado via servidor HTTP (não abra os arquivos diretamente no navegador)
+- Certifique-se de que o arquivo locais.json está presente na pasta backend
+
+
 ## 🧑‍🏫 Professor orientador
 
 Este projeto está sendo desenvolvido sob orientação do professor **Fabrício Valadares**, no curso de **Engenharia de Software**.
 
-## 👨‍💻 Autor
+## 👨‍💻 Autores
 
 Desenvolvido pela turma de Engenharia de Software.
 André, Bernardo, Breno, Eduardo, Guilherme, João Victor, Lay e Maria
