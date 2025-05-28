@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maps UniBH</title>
+    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../styles/styleMaps.css" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
+  <body>
+    <div class="search-container">
+      <!-- Botão para expandir/recolher -->
+      <button id="toggle-search" class="toggle-btn">☰ Busca</button>
+
+      <!-- Caixa de busca (inicialmente recolhida) -->
+      <div class="input-box recolhido" id="search-box">
+        <!-- Caixa de permissão GPS -->
+        <div id="permissao-gps" class="permissao-box">
+          <p>Para usar sua localização exata no mapa:</p>
+          <button id="ativar-gps">Ativar GPS</button>
+          <p class="dica">(Funciona melhor em celulares)</p>
+        </div>
+
+        <!-- Lista de locais frequentes -->
+        <div class="locais-list">
+          <h4>Locais Frequentes:</h4>
+          <ul>
+            <li data-local="Raízes 1" data-campo="origem">Raízes 1</li>
+            <li data-local="Raízes 2" data-campo="origem">Raízes 2</li>
+            <li data-local="Zito" data-campo="origem">Zito</li>
+            <li data-local="capela" data-campo="origem">Capela</li>
+            <li data-local="Biblioteca" data-campo="origem">Biblioteca</li>
+            <li data-local="Portaria" data-campo="origem">Portaria</li>
+            <li data-local="lanchonete" data-campo="origem">Lanchonete</li>
+            <li data-local="estacionamento" data-campo="origem">
+              Estacionamento
+            </li>
+            <li data-local="cafeteria" data-campo="origem">cafeteria</li>
+          </ul>
+        </div>
+
+        <!-- Inputs de origem e destino -->
+        <div class="input-field">
+          <label for="origem">Origem:</label>
+          <div class="input-with-icon">
+            <input
+              type="text"
+              id="origem"
+              placeholder="Digite ou selecione"
+              list="sugestoes-origem"
+            />
+            <span class="gps-icon" data-campo="origem">📍</span>
+          </div>
+          <datalist id="sugestoes-origem">
+            <option value="📍 Minha Localização"></option>
+          </datalist>
+        </div>
+
+        <div class="input-field">
+          <label for="destino">Destino:</label>
+          <div class="input-with-icon">
+            <input
+              type="text"
+              id="destino"
+              placeholder="Digite ou selecione"
+              list="sugestoes-destino"
+            />
+            <span class="gps-icon" data-campo="destino">📍</span>
+          </div>
+          <datalist id="sugestoes-destino">
+            <option value="📍 Minha Localização"></option>
+          </datalist>
+        </div>
+
+        <button id="calcRota" class="primary-btn">Calcular Rota</button>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../scripts/maps.js" type="module"></script>
+  </body>
+</html>
