@@ -402,10 +402,22 @@ datalist option {
   datalist option {
     font-size: 14px;
   }
+
+  .toggle-ajuda,
+  .toggle-btn {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px 15px;
+    /* Centralizar button */
+    position: relative;
+    left: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 /* Telas médias (tablets) */
 @media (min-width: 481px) and (max-width: 767px) {
+
   .input-box {
     padding: 14px 18px;
   }
