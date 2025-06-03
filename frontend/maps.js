@@ -268,7 +268,7 @@ async function calcularRota() {
 
   try {
     try {
-      const response = await fetch('https://maps-unibh.onrender.com/api/rota', {
+      const response = await fetch('https://mapa-unibh-backend.onrender.com/api/rota', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ origem, destino }),
@@ -300,7 +300,7 @@ async function calcularRota() {
 async function getCoordinates(local) {
   try {
     const response = await fetch(
-      `https://maps-unibh.onrender.com/api/buscar-local?local=${encodeURIComponent(
+      `https://mapa-unibh-backend.onrender.com/api/buscar-local?local=${encodeURIComponent(
         local,
       )}`,
     )
