@@ -236,6 +236,24 @@ datalist option {
   max-width: 300px;
 }
 
+.toggle-ajuda {
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  /* Transição para efeitos hover */
+  transition: all 0.3s;
+}
+
+.toggle-ajuda:hover {
+  transform: scale(1.05);
+  background: #143ba9;
+}
+
 /* Botão de toggle do menu */
 .toggle-btn {
   background: #1a56db;
@@ -245,7 +263,7 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   width: 100%;
   /* Transição para efeitos hover */
   transition: all 0.3s;
@@ -253,6 +271,7 @@ datalist option {
 
 /* Efeito hover do botão toggle */
 .toggle-btn:hover {
+  transform: scale(1.05);
   background: #143ba9;
 }
 

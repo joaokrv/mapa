@@ -72,6 +72,15 @@ function setupToggleMenu() {
     })
 }
 
+// Página de ajuda
+function setupHelpButton() {
+  document
+    .getElementById('toggle-help')
+    .addEventListener('click', function () {
+      window.location.href = 'ajuda.html'
+    })
+}
+
 // Seleção de locais frequentes
 function setupLocalSelection() {
   document.querySelectorAll('.locais-list li').forEach((item) => {
@@ -82,6 +91,8 @@ function setupLocalSelection() {
     })
   })
 }
+
+window.addEventListener('DOMContentLoaded', setupHelpButton);
 
 // Função para selecionar um local
 function selecionarLocal(nome, campo) {
@@ -257,7 +268,7 @@ async function calcularRota() {
 
   try {
     try {
-      const response = await fetch('http://localhost:3000/api/rota', {
+      const response = await fetch('https://maps-unibh.onrender.com/api/rota', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ origem, destino }),
@@ -289,7 +300,7 @@ async function calcularRota() {
 async function getCoordinates(local) {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/buscar-local?local=${encodeURIComponent(
+      `https://maps-unibh.onrender.com/api/buscar-local?local=${encodeURIComponent(
         local,
       )}`,
     )
