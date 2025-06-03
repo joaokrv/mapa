@@ -1,12 +1,12 @@
 // Configurações do mapa
 const MAP_CONFIG = {
-  center: [-19.9716538355151, -43.96324375462156],
+  center: [-19.971175446951637, -43.963693397748266],
   zoom: 20,
-  zoomMax: 20,
-  zoomMin: 19,
+  zoomMax: 25,
+  zoomMin: 17,
   bounds: L.latLngBounds(
-    L.latLng(-19.96967239132942, -43.96451512163013),
-    L.latLng(-19.972541764414082, -43.962061590405),
+    L.latLng(-19.969562054271996, -43.96529199424035),
+    L.latLng(-19.97262748624759, -43.961837309203744),
   ),
   tileLayers: {
     satellite:
@@ -56,7 +56,9 @@ function ajustarMapa() {
   if (!map.getBounds().intersects(MAP_CONFIG.bounds)) {
     map.fitBounds(MAP_CONFIG.bounds)
   }
-  if (map.getZoom() < 19) map.setZoom(19)
+  if (map.getZoom() < MAP_CONFIG.zoomMin) {
+    map.setZoom(MAP_CONFIG.zoomMin)
+  }
 }
 
 // Controle do menu retrátil
