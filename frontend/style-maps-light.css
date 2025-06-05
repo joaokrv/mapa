@@ -11,10 +11,12 @@
 }
 
 /* Estilos base para body e html */
-body, html {
+body,
+html {
   height: 100%; /* Ocupa 100% da altura da viewport */
   /* Fonte padrão para melhor legibilidade */
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   color: #fff; /* Cor do texto principal */
   /* Redundância para garantir reset */
   margin: 0;
@@ -42,11 +44,11 @@ body, html {
 /* ESTILOS DOS MARCADORES */
 /* ============================================= */
 .marcador-origem {
-    filter: drop-shadow(0 0 3px rgb(255, 255, 255));
+  filter: drop-shadow(0 0 3px rgb(255, 255, 255));
 }
 
 .marcador-destino {
-    filter: drop-shadow(0 0 3px rgb(255, 255, 255));
+  filter: drop-shadow(0 0 3px rgb(255, 255, 255));
 }
 
 /* ============================================= */
@@ -126,13 +128,15 @@ body, html {
 /* Estilo especial para inputs com datalist */
 input[list] {
   /* Adiciona ícone de seta personalizado */
-  background: #fff url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat 98% center;
+  background: #fff
+    url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat 98% center;
   background-size: 20px;
 }
 
 /* Oculta o datalist mas mantém funcionalidade */
 datalist {
-    display: none;
+  display: none;
 }
 
 /* Estilo das opções do datalist */
@@ -230,22 +234,28 @@ datalist option {
 /* Container do menu de busca */
 .search-container {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 10px; /* Distância padrão do fundo */
+  left: 50%; /* Centraliza horizontalmente */
+  transform: translateX(-50%); /* Ajuste para centralização horizontal */
   z-index: 1000;
-  max-width: 300px;
+  max-width: 300px; /* Limita a largura máxima em telas maiores */
+  width: calc(
+    100% - 40px
+  ); /* Garante que não colem nas bordas em telas pequenas */
+  padding: 0 10px; /* Espaçamento interno */
+  box-sizing: border-box;
 }
 
 .toggle-ajuda {
   background: #1a56db;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 6px 6px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  width: 100%;
-  /* Transição para efeitos hover */
+  margin-bottom: 15px;
+  width: 90%;
   transition: all 0.3s;
 }
 
@@ -259,13 +269,12 @@ datalist option {
   background: #1a56db;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 6px 6px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
   margin-bottom: 15px;
-  width: 100%;
-  /* Transição para efeitos hover */
+  width: 90%;
   transition: all 0.3s;
 }
 
@@ -275,12 +284,63 @@ datalist option {
   background: #143ba9;
 }
 
+/* Botão de compartilhar localização */
+.share-location {
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 8px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 40px;
+  width: 90%;
+  transition: all 0.3s;
+}
+
+/* Efeito hover do botão de compartilhar localização */
+.share-location:hover {
+  transform: scale(1.02);
+  background: #143ba9;
+}
+
+/* Estilos para o botão de fechar */
+.close-btn {
+  position: absolute; /* Posicionamento absoluto em relação ao .input-box */
+  top: 8px; /* Ajuste a distância do topo se necessário */
+  right: 8px; /* Ajuste a distância da direita se necessário */
+  background: #ffffff; /* Um fundo sutil para o botão */
+  border: 1px solid #718096; /* Uma borda sutil */
+  color: #000000; /* Cor do "X" */
+  font-size: 18px; /* Tamanho do "X" */
+  line-height: 1; /* Garante que o X fique centralizado verticalmente */
+  cursor: pointer;
+  padding: 6px 10px; /* Aumenta o padding para um tamanho clicável maior */
+  border-radius: 50%; /* Faz o botão ser um círculo */
+  width: 30px; /* Largura e altura para garantir que seja um círculo perfeito */
+  height: 30px;
+  display: flex; /* Para centralizar o 'X' */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  z-index: 10; /* Garante que fique acima de outros elementos */
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease; /* Transições suaves */
+}
+
+.close-btn:hover {
+  background: #4766ad; /* Fundo mais escuro ao passar o mouse */
+  color: white; /* Cor branca para o X ao passar o mouse */
+  border-color: #a0aec0; /* Borda mais clara */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra mais pronunciada */
+}
+
 /* Caixa de inputs (estado padrão - recolhido) */
 .input-box {
   background: white;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   /* Animações de recolhimento */
   transition: all 0.3s ease-out;
   max-height: 0;
@@ -294,7 +354,7 @@ datalist option {
   opacity: 1;
   padding: 15px;
   /* Permite rolagem se conteúdo for muito longo */
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 /* ============================================= */
@@ -379,8 +439,12 @@ datalist option {
 
 /* Animação do spinner */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============================================= */
@@ -404,7 +468,8 @@ datalist option {
   }
 
   .toggle-ajuda,
-  .toggle-btn {
+  .toggle-btn,
+  #share-location {
     width: 100%;
     font-size: 16px;
     padding: 10px 15px;
@@ -417,7 +482,6 @@ datalist option {
 
 /* Telas médias (tablets) */
 @media (min-width: 481px) and (max-width: 767px) {
-
   .input-box {
     padding: 14px 18px;
   }
