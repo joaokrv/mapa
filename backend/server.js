@@ -1,12 +1,19 @@
 const path = require("path");
 const express = require("express");
-const cors = require("cors");
+//const cors = require("cors");
 const axios = require("axios");
 const { connect } = require("./db");
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://mapa-two.vercel.app", // AQUI: substitua pelo domínio EXATO do seu frontend no Vercel
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos HTTP que você permite
+  credentials: true, // Se você estiver usando cookies ou cabeçalhos de autorização
+  optionsSuccessStatus: 204, // Alguns navegadores esperam 204 para pré-voos bem-sucedidos
+};
+
+app.use(cors(corsOptions)); // Use a configuração customizada de CORS
 app.use(express.json());
 
 // Função para buscar locais da tabela dbo.Pontos
