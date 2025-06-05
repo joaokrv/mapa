@@ -18,7 +18,6 @@ async function obterLocaisDoBanco() {
   result.recordset.forEach((row) => {
     locais[row.nome] = [row.latitude, row.longitude];
   });
-  console.log("Locais obtidos do banco:", locais);
   return locais;
 }
 
