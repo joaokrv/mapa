@@ -490,14 +490,10 @@ datalist option {
 
   .toggle-ajuda,
   .toggle-btn,
-  .search-location {
+  .share-location {
     width: 100%;
     font-size: 16px;
     padding: 10px 15px;
-    /* Centralizar button */
-    position: relative;
-    left: 50%;
-    transform: translateY(-50%);
   }
 }
 
