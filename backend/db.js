@@ -1,5 +1,5 @@
-const sql = require("mssql");
-require("dotenv").config();
+const sql = require('mssql');
+require('dotenv').config();
 
 const config = {
   user: process.env.DB_USER,
@@ -9,8 +9,8 @@ const config = {
   port: parseInt(process.env.DB_PORT) || 1433,
   options: {
     encrypt: true,
-    trustServerCertificate: true,
-  },
+    trustServerCertificate: true
+  }
 };
 
 let poolPromise;
@@ -19,9 +19,9 @@ async function connect() {
   if (!poolPromise) {
     try {
       poolPromise = await sql.connect(config);
-      console.log("Conectado ao banco de dados!");
+      console.log('Conectado ao banco de dados!');
     } catch (err) {
-      console.error("Erro ao conectar:", err);
+      console.error('Erro ao conectar:', err);
       throw err;
     }
   }

@@ -11,19 +11,19 @@ Sistema de mapeamento inteligente e interativo para auxiliar na localização de
 
 O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio de um sistema acessível e eficiente, ideal para:
 
-- 🧑‍🎓 Calouros e veteranos
-- 👩‍🏫 Professores
-- 👥 Visitantes
-- 📍 Qualquer pessoa que deseje encontrar rapidamente seu destino dentro da faculdade
+- 🧑‍🎓 Calouros e veteranos  
+- 👩‍🏫 Professores  
+- 👥 Visitantes  
+- 📍 Qualquer pessoa que deseje encontrar rapidamente seu destino dentro da faculdade  
 
 ---
 
 ## 🚀 Funcionalidades planejadas
 
-- 🧭 Cálculo de rotas entre pontos do campus
-- 🔍 Busca inteligente por locais
-- 🧠 Interface amigável e intuitiva
-- 📱 Responsividade para diferentes tamanhos de tela
+- 🧭 Cálculo de rotas entre pontos do campus  
+- 🔍 Busca inteligente por locais  
+- 🧠 Interface amigável e intuitiva  
+- 📱 Responsividade para diferentes tamanhos de tela  
 
 ---
 
@@ -40,10 +40,10 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 
 ## 💡 Público-alvo
 
-- Estudantes (novatos e veteranos)
-- Professores e funcionários
-- Visitantes e prestadores de serviço
-- Qualquer pessoa que deseje se orientar dentro do campus
+- Estudantes (novatos e veteranos)  
+- Professores e funcionários  
+- Visitantes e prestadores de serviço  
+- Qualquer pessoa que deseje se orientar dentro do campus  
 
 ---
 
@@ -66,59 +66,52 @@ Este projeto é uma **aplicação web responsiva**, com plano futuro de expansã
 
 2. **Inicie o servidor:**
 
-   ```bash
-   node server.js
-   ```
+    ```bash
+    node server.js
+    ```
 
 3. **Verifique o funcionamento:**
 
 - O servidor estará rodando em: http://localhost:3000
 
 - Rotas disponíveis:
-  - GET /api/locais — Lista todos os locais disponíveis
-  - GET /api/buscar-local?local=NOME_DO_LOCAL — Busca coordenadas de um local específico
-  - POST /api/rota — Calcula rota entre origem e destino
+    - GET /api/locais — Lista todos os locais disponíveis
+    - GET /api/buscar-local?local=NOME_DO_LOCAL — Busca coordenadas de um local específico
+    - POST /api/rota — Calcula rota entre origem e destino
 
 ### 🌐 Frontend
-
 Após iniciar o backend, abra o frontend:
 
 1. **Opção 1 — VS Code + Live Server**
-
 - Instale a extensão Live Server
 - Clique com o botão direito no arquivo frontend/docs/index.html
 - Selecione "Open with Live Server"
 
 2. **Opção 2 — HTTP Server (via terminal)**
-
-   ```bash
-   cd frontend
-   npx http-server
-   ```
+    
+    ```bash
+    cd frontend
+    npx http-server
+    ```
 
 Acesse em: http://localhost:<porta>/docs/index.html
-
 > ⚠️ **Importante:**
 >
-> - O **backend deve estar rodando** para que as funcionalidades funcionem.
-> - O **frontend deve ser acessado via servidor HTTP**, não diretamente pelo navegador.
+> - O **backend deve estar rodando** para que as funcionalidades funcionem.  
+> - O **frontend deve ser acessado via servidor HTTP**, não diretamente pelo navegador.  
 > - Verifique se o arquivo **`locais.json`** está presente na pasta `backend`.
 
 ## 👨‍🏫 Professor Orientador
-
 Este projeto está sendo desenvolvido sob orientação do professor Fabrício Valadares, no curso de Engenharia de Software.
 
 ## 🧠 Idealização
-
 A ideia original do Mapa Faculdade foi concebida por Breno, colega da turma de Engenharia de Software.
 
 ## 👨‍💻 Autores
-
 Projeto desenvolvido pela turma de Engenharia de Software:
 André, Bernardo, Breno, Eduardo, Guilherme, João Victor, Lay, Maria
 
 ## 🤝 Contribuição
-
 Este projeto foi desenvolvido em equipe com foco na aplicação prática de:
 
 - Metodologias ágeis
