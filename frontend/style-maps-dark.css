@@ -10,9 +10,11 @@
 }
 
 /* Estilos base para body e html */
-body, html {
+body,
+html {
   height: 100%;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   color: #fff;
   margin: 0;
   padding: 0;
@@ -38,11 +40,11 @@ body, html {
 /* ESTILOS DOS MARCADORES */
 /* ============================================= */
 .marcador-origem {
-    filter: drop-shadow(0 0 3px rgb(255, 255, 255));
+  filter: drop-shadow(0 0 3px rgb(255, 255, 255));
 }
 
 .marcador-destino {
-    filter: drop-shadow(0 0 3px rgb(255, 255, 255));
+  filter: drop-shadow(0 0 3px rgb(255, 255, 255));
 }
 
 /* ============================================= */
@@ -58,7 +60,7 @@ body, html {
   left: 50%;
   transform: translateX(-50%);
   /* Estilo visual */
-  background-color: #2D3748;
+  background-color: #2d3748;
   padding: 12px 16px;
   border-radius: 8px;
   /* Sombra para dar profundidade */
@@ -93,7 +95,7 @@ body, html {
   font-size: 18px;
   z-index: 2;
   background: rgba(45, 55, 72, 0.8);
-  color: #E0E0E0;
+  color: #e0e0e0;
   padding: 2px 5px;
   border-radius: 50%;
   /* Transição suave para hover */
@@ -125,21 +127,22 @@ body, html {
 /* Estilo especial para inputs com datalist */
 input[list] {
   /* Adiciona ícone de seta personalizado */
-  background: #2D3748 url('data:image/svg+xml;utf8,<svg fill="%23E0E0E0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat 98% center;
+  background: #2d3748
+    url('data:image/svg+xml;utf8,<svg fill="%23E0E0E0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat 98% center;
   background-size: 20px;
 }
 
 /* Oculta o datalist mas mantém funcionalidade */
 datalist {
-    display: none;
+  display: none;
 }
 
 /* Estilo das opções do datalist */
 datalist option {
-  color: #E0E0E0; /* Lighter text for datalist options */
-  background-color: #2D3748; /* Darker background for datalist options */
+  color: #e0e0e0; /* Lighter text for datalist options */
+  background-color: #2d3748; /* Darker background for datalist options */
 }
-
 
 /* ============================================= */
 /* COMPONENTES ESPECÍFICOS */
@@ -147,19 +150,19 @@ datalist option {
 
 /* Caixa de permissão de geolocalização */
 .permissao-box {
-  background: #2D3748; /* Darker background for permission box */
+  background: #2d3748; /* Darker background for permission box */
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 15px;
   text-align: center;
-  border: 1px solid #4A5568; /* Darker border */
+  border: 1px solid #4a5568; /* Darker border */
   display: none;
 }
 
 /* Texto dentro da caixa de permissão */
 .permissao-box p {
   margin-bottom: 8px;
-  color: #E0E0E0;
+  color: #e0e0e0;
   font-size: 14px;
 }
 
@@ -184,7 +187,7 @@ datalist option {
 /* Texto de dica secundária */
 .dica {
   font-size: 12px;
-  color: #A0AEC0;
+  color: #a0aec0;
   margin-top: 8px;
 }
 
@@ -230,22 +233,28 @@ datalist option {
 /* Container do menu de busca */
 .search-container {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 10px; /* Distância padrão do fundo */
+  left: 50%; /* Centraliza horizontalmente */
+  transform: translateX(-50%); /* Ajuste para centralização horizontal */
   z-index: 1000;
-  max-width: 300px;
+  max-width: 300px; /* Limita a largura máxima em telas maiores */
+  width: calc(
+    100% - 40px
+  ); /* Garante que não colem nas bordas em telas pequenas */
+  padding: 0 10px; /* Espaçamento interno */
+  box-sizing: border-box;
 }
 
 .toggle-ajuda {
   background: #1a56db;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 6px 6px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  width: 100%;
-  /* Transição para efeitos hover */
+  margin-bottom: 15px;
+  width: 90%;
   transition: all 0.3s;
 }
 
@@ -259,13 +268,12 @@ datalist option {
   background: #1a56db;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 6px 6px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
   margin-bottom: 15px;
-  width: 100%;
-  /* Transição para efeitos hover */
+  width: 90%;
   transition: all 0.3s;
 }
 
@@ -275,26 +283,96 @@ datalist option {
   background: #143ba9;
 }
 
+/* Botão de compartilhar localização */
+.share-location {
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 8px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 40px;
+  width: 90%;
+  transition: all 0.3s;
+}
+
+/* Efeito hover do botão de compartilhar localização */
+.share-location:hover {
+  transform: scale(1.02);
+  background: #143ba9;
+}
+
+/* Estilos para o botão de fechar */
+.close-btn {
+  position: absolute; /* Posicionamento absoluto em relação ao .input-box */
+  top: 8px; /* Ajuste a distância do topo se necessário */
+  right: 8px; /* Ajuste a distância da direita se necessário */
+  background: #4a5568; /* Um fundo sutil para o botão */
+  border: 1px solid #718096; /* Uma borda sutil */
+  color: #e2e8f0; /* Cor do "X" */
+  font-size: 18px; /* Tamanho do "X" */
+  line-height: 1; /* Garante que o X fique centralizado verticalmente */
+  cursor: pointer;
+  padding: 6px 10px; /* Aumenta o padding para um tamanho clicável maior */
+  border-radius: 50%; /* Faz o botão ser um círculo */
+  width: 30px; /* Largura e altura para garantir que seja um círculo perfeito */
+  height: 30px;
+  display: flex; /* Para centralizar o 'X' */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  z-index: 10; /* Garante que fique acima de outros elementos */
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease; /* Transições suaves */
+}
+
+.close-btn:hover {
+  background: #636b7d; /* Fundo mais escuro ao passar o mouse */
+  color: white; /* Cor branca para o X ao passar o mouse */
+  border-color: #a0aec0; /* Borda mais clara */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada */
+}
+
+/* Para o caso de usar um ícone (Font Awesome, por exemplo) */
+.close-btn i {
+  font-size: 16px; /* Ajuste o tamanho do ícone se o "X" for um Font Awesome */
+}
+
 /* Caixa de inputs (estado padrão - recolhido) */
 .input-box {
-  background: #2D3748;
+  background: #2d3748;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+
   /* Animações de recolhimento */
-  transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out; /* Mantenha isso para a transição suave */
+
+  /* Garante que esteja "esmagado" e não ocupe espaço para o conteúdo interno */
   max-height: 0;
   overflow: hidden;
   opacity: 0;
+
+  /* Novas propriedades para garantir que não seja clicável e não interfira */
+  visibility: hidden; /* Oculta visualmente e remove da árvore de acessibilidade */
+  pointer-events: none; /* **CRUCIAL:** Impede que intercepte eventos de clique */
+
+  /* Removido o padding: 15px; daqui */
+  /* Para controlar o padding quando aberto, coloque-o na classe .aberto */
+  padding: 0 15px; /* Define padding horizontal, vertical será controlado pelo max-height */
 }
 
 /* Estado aberto do menu */
 .input-box.aberto {
-  max-height: 500px;
+  max-height: 500px; /* Suficiente para mostrar o conteúdo */
   opacity: 1;
+  overflow-y: hidden; /* Pode ser auto se preferir rolagem quando o conteúdo exceder */
+  visibility: visible; /* Torna visível */
+  pointer-events: auto; /* Permite cliques */
+
+  /* Aplique o padding total quando estiver aberto */
   padding: 15px;
-  /* Permite rolagem se conteúdo for muito longo */
-  overflow-y: auto;
 }
 
 /* ============================================= */
@@ -311,7 +389,7 @@ datalist option {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #E0E0E0;
+  color: #e0e0e0;
 }
 
 /* Container para inputs com ícone */
@@ -323,10 +401,10 @@ datalist option {
 .input-with-icon input {
   width: 100%;
   padding: 10px 35px 10px 10px;
-  border: 1px solid #4A5568;
+  border: 1px solid #4a5568;
   border-radius: 4px;
-  color: #E0E0E0; /* Lighter text for inputs */
-  background-color: #2D3748; /* Darker background for inputs */
+  color: #e0e0e0; /* Lighter text for inputs */
+  background-color: #2d3748; /* Darker background for inputs */
 }
 
 /* Lista de locais frequentes */
@@ -336,13 +414,13 @@ datalist option {
 
 /* Título da lista */
 .locais-list h4 {
-  color: #E0E0E0;
+  color: #e0e0e0;
   margin-bottom: 8px;
 }
 
 /* Lista de itens */
 .locais-list ul {
-  color: #E0E0E0;
+  color: #e0e0e0;
   list-style: none;
   padding: 0;
   /* Layout flexível */
@@ -353,9 +431,9 @@ datalist option {
 
 /* Itens da lista */
 .locais-list li {
-  color: #E0E0E0; /* Lighter text for list item */
+  color: #e0e0e0; /* Lighter text for list item */
   padding: 6px 12px;
-  background: #4A5568; /* Darker background for list item */
+  background: #4a5568; /* Darker background for list item */
   border-radius: 15px;
   cursor: pointer;
   font-size: 14px;
@@ -365,7 +443,7 @@ datalist option {
 
 /* Efeito hover dos itens */
 .locais-list li:hover {
-  background: #2C3E50; /* Even darker background on hover */
+  background: #2c3e50; /* Even darker background on hover */
 }
 
 /* ============================================= */
@@ -382,8 +460,12 @@ datalist option {
 
 /* Animação do spinner */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============================================= */
@@ -407,7 +489,8 @@ datalist option {
   }
 
   .toggle-ajuda,
-  .toggle-btn {
+  .toggle-btn,
+  .search-location {
     width: 100%;
     font-size: 16px;
     padding: 10px 15px;
@@ -420,7 +503,6 @@ datalist option {
 
 /* Telas médias (tablets) */
 @media (min-width: 481px) and (max-width: 767px) {
-
   .input-box {
     padding: 14px 18px;
   }

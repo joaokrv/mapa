@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Maps UniBH</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="style-maps-light.css" id="theme-stylesheet"/>
+    <link rel="stylesheet" href="style-maps-light.css" id="theme-stylesheet" />
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   </head>
@@ -15,10 +15,14 @@
         <!-- Botão para expandir/recolher -->
         <button id="toggle-search" class="toggle-btn">☰ Busca</button>
         <button id="toggle-help" class="toggle-ajuda">Ajuda</button>
+        <button id="toggle-share" class="share-location">
+          Compartilhar Localização
+        </button>
       </div>
-      
+
       <!-- Caixa de busca (inicialmente recolhida) -->
       <div class="input-box recolhido" id="search-box">
+        <button class="close-btn" aria-label="Fechar menu">X</button>
         <!-- Caixa de permissão GPS -->
         <div id="permissao-gps" class="permissao-box">
           <p>Para usar sua localização exata no mapa:</p>
