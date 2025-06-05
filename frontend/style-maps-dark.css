@@ -367,7 +367,7 @@ datalist option {
 .input-box.aberto {
   max-height: 500px; /* Suficiente para mostrar o conteúdo */
   opacity: 1;
-  overflow-y: hidden; /* Pode ser auto se preferir rolagem quando o conteúdo exceder */
+  overflow-y: auto; /* Pode ser auto se preferir rolagem quando o conteúdo exceder */
   visibility: visible; /* Torna visível */
   pointer-events: auto; /* Permite cliques */
 
