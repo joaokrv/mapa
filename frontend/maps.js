@@ -397,30 +397,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Configuração dos botões e menus
   setupToggleMenu();
-  setupHelpButton(); // Já está no DOMContentLoaded, mas podemos consolidar
+  setupHelpButton();
   setupLocalSelection();
   setupGPSButtons();
-  detectarDispositivo(); // Se essa função for chamada apenas uma vez ao carregar
+  detectarDispositivo();
 
   // Adiciona evento de clique ao botão de calcular rota
   document.getElementById("calcRota").addEventListener("click", calcularRota);
 
-  // Adiciona evento de clique ao botão de compartilhar localização
+  // === CORREÇÃO AQUI ===
+  // Declare e inicialize shareButton AQUI
   const shareButton = document.getElementById("toggle-share");
+
+  // Adiciona evento de clique ao botão de compartilhar localização
   if (shareButton) {
     shareButton.addEventListener("click", compartilharLocalizacao);
   } else {
     console.warn("Elemento com ID 'toggle-share' não encontrado no DOM.");
   }
+  // === FIM DA CORREÇÃO ===
 
   // Adiciona evento de clique ao botão de fechar (o "X")
-  const searchBox = document.getElementById("search-box"); // Definir aqui
-  const toggleSearchBtn = document.getElementById("toggle-search"); // Definir aqui
+  const searchBox = document.getElementById("search-box");
+  const toggleSearchBtn = document.getElementById("toggle-search");
   const closeBtn = document.querySelector(".input-box .close-btn");
   if (closeBtn && searchBox && toggleSearchBtn) {
     closeBtn.addEventListener("click", () => {
       searchBox.classList.remove("aberto");
-      searchBox.classList.add("recolhido"); // Se você usa 'recolhido' para o estado fechado
+      searchBox.classList.add("recolhido");
       toggleSearchBtn.textContent = "☰ Busca";
     });
   } else {

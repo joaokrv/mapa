@@ -341,20 +341,34 @@ datalist option {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+
   /* Animações de recolhimento */
-  transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out; /* Mantenha isso para a transição suave */
+
+  /* Garante que esteja "esmagado" e não ocupe espaço para o conteúdo interno */
   max-height: 0;
   overflow: hidden;
   opacity: 0;
+
+  /* Novas propriedades para garantir que não seja clicável e não interfira */
+  visibility: hidden; /* Oculta visualmente e remove da árvore de acessibilidade */
+  pointer-events: none; /* **CRUCIAL:** Impede que intercepte eventos de clique */
+
+  /* Removido o padding: 15px; daqui */
+  /* Para controlar o padding quando aberto, coloque-o na classe .aberto */
+  padding: 0 15px; /* Define padding horizontal, vertical será controlado pelo max-height */
 }
 
 /* Estado aberto do menu */
 .input-box.aberto {
-  max-height: 500px;
+  max-height: 500px; /* Suficiente para mostrar o conteúdo */
   opacity: 1;
+  overflow-y: hidden; /* Pode ser auto se preferir rolagem quando o conteúdo exceder */
+  visibility: visible; /* Torna visível */
+  pointer-events: auto; /* Permite cliques */
+
+  /* Aplique o padding total quando estiver aberto */
   padding: 15px;
-  /* Permite rolagem se conteúdo for muito longo */
-  overflow-y: hidden;
 }
 
 /* ============================================= */
