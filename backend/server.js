@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
@@ -34,7 +35,7 @@ app.get("/api/test-pontos", async (req, res) => {
 });
 
 function normalizarNomeLocal(nome, locais) {
-  if (!nome || typeof nome !== "string") return null;
+  if (!nome || typeof nome !== 'string') return null;
 
   const coordMatch = nome.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
   if (coordMatch) {
@@ -91,7 +92,6 @@ app.get("/api/locais", async (req, res) => {
 app.post("/api/rota", async (req, res) => {
   try {
     const { origem, destino } = req.body;
-    const locais = await obterLocaisDoBanco();
 
     const coordOrigem = normalizarNomeLocal(origem, locais);
     const coordDestino = normalizarNomeLocal(destino, locais);
