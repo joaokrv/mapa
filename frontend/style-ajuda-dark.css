@@ -1,0 +1,151 @@
+/* style-ajuda-dark.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+  background: #1A202C; /* Um cinza muito escuro/quase preto para o fundo */
+  color: #E0E0E0;      /* Cor de texto principal (cinza claro) */
+}
+
+/* Botão de Voltar */
+.voltar {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: #00B0C0; /* Ciano vibrante (funciona bem em ambos os temas como destaque) */
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  z-index: 1000;
+}
+
+.voltar:hover {
+  background: #008A9E;
+}
+
+/* Cabeçalho */
+header {
+  background: #001F3F; /* Azul marinho muito escuro para o cabeçalho */
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Container principal de conteúdo (mantém as características de layout) */
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Seções de introdução e outros textos */
+.intro {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.intro h2 {
+  color: #66CCFF; /* Azul claro/ciano para títulos de introdução em tema escuro */
+  font-size: 2rem;
+}
+
+/* Layout dos cards */
+.steps, .extra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+/* Estilo individual do Card */
+.card {
+  background: #2C3E50; /* Cinza azulado escuro para os cards */
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4); /* Sombra mais forte para tema escuro */
+  padding: 1rem;
+  flex: 1 1 280px;
+  max-width: 350px;
+  color: #D3D3D3; /* Cor do texto padrão dentro do card (cinza mais claro) */
+}
+
+.card h3 {
+  color: #87CEEB; /* Azul céu para títulos dos cards em tema escuro */
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+}
+
+.card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Texto de agradecimento */
+.thank-you {
+  text-align: center;
+  margin-top: 3rem;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #00CED1; /* Azul turquesa/ciano mais claro para destaque */
+}
+
+/* Rodapé */
+footer {
+  background: #001F3F; /* Azul marinho muito escuro para o rodapé */
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* Media Queries (importante replicar em ambos os arquivos) */
+@media (max-width: 768px) {
+  .card {
+    max-width: 100%;
+  }
+
+  .intro h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .voltar {
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  .container {
+    padding: 1rem;
+  }
+  header h1 {
+    font-size: 1.5rem;
+  }
+  .intro h2 {
+    font-size: 1.2rem;
+  }
+  .card h3 {
+    font-size: 1rem;
+  }
+  .card p {
+    font-size: 0.9rem;
+  }
+  .thank-you {
+    font-size: 1.1rem;
+  }
+}

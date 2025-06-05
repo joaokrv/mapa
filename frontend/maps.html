@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Maps UniBH</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="styleMaps.css" />
+    <link rel="stylesheet" href="style-maps-light.css" id="theme-stylesheet"/>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   </head>
@@ -14,7 +14,7 @@
       <div class="buttons-container">
         <!-- Botão para expandir/recolher -->
         <button id="toggle-search" class="toggle-btn">☰ Busca</button>
-        <button id="toggle-help" class="toggle-ajuda">Ajuda</button>  
+        <button id="toggle-help" class="toggle-ajuda">Ajuda</button>
       </div>
       
       <!-- Caixa de busca (inicialmente recolhida) -->
@@ -119,5 +119,6 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="maps.js" type="module"></script>
+    <script src="theme.js"></script>
   </body>
 </html>

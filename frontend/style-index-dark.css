@@ -14,13 +14,13 @@ body {
 }
 
 .container {
-  background-color: white;
+  background-color: #1A3A5E;
   padding: 40px;
   border-radius: 16px;
   text-align: center;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
 }
 
 .logo {
@@ -32,19 +32,19 @@ body {
 
 
 h1 {
-  color: #002D62;
+  color: #81b3ff;
   font-size: 22px;
   margin-bottom: 16px;
 }
 
 p {
-  color: #333;
+  color: #ffffff;
   margin-bottom: 10px;
 }
 
 /* Estilo base para ambos */
 .botoes button,
-.botao-ajuda, .botao-maps {
+.botao-ajuda, .botao-maps, .theme-toggle-button {
   margin-top: 0;
   background-color: #00B3B3;
   color: white;
@@ -66,7 +66,7 @@ p {
 
 /* Hover igual */
 .botoes button:hover,
-.botao-ajuda:hover, .botao-maps:hover {
+.botao-ajuda:hover, .botao-maps:hover, .theme-toggle-button:hover {
   background-color: #009999;
 }
 
