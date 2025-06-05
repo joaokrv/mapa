@@ -1,4 +1,3 @@
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
@@ -9,23 +8,33 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const locais = require(path.join(__dirname, "locais.json"));
+// Função para buscar locais da tabela dbo.Pontos
+async function obterLocaisDoBanco() {
+  const pool = await connect();
+  const result = await pool
+    .request()
+    .query("SELECT nome, latitude, longitude FROM dbo.Pontos");
+  const locais = {};
+  result.recordset.forEach((row) => {
+    locais[row.nome] = [row.latitude, row.longitude];
+  });
+  return locais;
+}
 
-app.get("/api/locais", (req, res) => {
-  res.json(locais);
+// Rota temporária para testar se está pegando os dados da tabela dbo.Pontos
+app.get("/api/test-pontos", async (req, res) => {
+  try {
+    const pool = await connect();
+    const result = await pool.request().query("SELECT * FROM dbo.Pontos");
+    res.json(result.recordset);
+  } catch (error) {
+    console.error("Erro ao buscar pontos:", error);
+    res.status(500).json({ error: "Erro ao buscar pontos do banco" });
+  }
 });
 
 function normalizarNomeLocal(nome, locais) {
   if (!nome || typeof nome !== "string") return null;
-
-  if (
-    Array.isArray(nome) &&
-    nome.length === 2 &&
-    typeof nome[0] === "number" &&
-    typeof nome[1] === "number"
-  ) {
-    return nome;
-  }
 
   const coordMatch = nome.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
   if (coordMatch) {
@@ -69,9 +78,20 @@ function normalizarNomeLocal(nome, locais) {
   return null;
 }
 
+app.get("/api/locais", async (req, res) => {
+  try {
+    const locais = await obterLocaisDoBanco();
+    res.json(locais);
+  } catch (error) {
+    console.error("Erro ao buscar locais:", error);
+    res.status(500).json({ error: "Erro ao buscar locais do banco" });
+  }
+});
+
 app.post("/api/rota", async (req, res) => {
   try {
     const { origem, destino } = req.body;
+    const locais = await obterLocaisDoBanco();
 
     const coordOrigem = normalizarNomeLocal(origem, locais);
     const coordDestino = normalizarNomeLocal(destino, locais);
