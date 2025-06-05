@@ -8,15 +8,28 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Função para buscar locais da tabela dbo.Pontos
 async function obterLocaisDoBanco() {
   const pool = await connect();
-  const result = await pool.request().query('SELECT nome, latitude, longitude FROM PONTOS');
+  const result = await pool.request().query('SELECT nome, latitude, longitude FROM dbo.Pontos');
   const locais = {};
   result.recordset.forEach((row) => {
     locais[row.nome] = [row.latitude, row.longitude];
   });
   return locais;
 }
+
+// Rota temporária para testar se está pegando os dados da tabela dbo.Pontos
+app.get('/api/test-pontos', async (req, res) => {
+  try {
+    const pool = await connect();
+    const result = await pool.request().query('SELECT * FROM dbo.Pontos');
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Erro ao buscar pontos:', error);
+    res.status(500).json({ error: 'Erro ao buscar pontos do banco' });
+  }
+});
 
 function normalizarNomeLocal(nome, locais) {
   if (!nome || typeof nome !== 'string') return null;
