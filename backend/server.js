@@ -48,7 +48,7 @@ async function obterLocaisDoBanco() {
 const locais = await obterLocaisDoBanco();
 
 function normalizarNomeLocal(nome, locais) {
-  if (!nome || typeof nome !== "string") return null;
+  if (!nome || typeof nome !== 'string') return null;
 
   const coordMatch = nome.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
   if (coordMatch) {
