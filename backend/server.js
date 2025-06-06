@@ -6,11 +6,27 @@ const { connect } = require("./db");
 
 const app = express();
 
+const allowedOrigins = [
+  "https://mapa-two.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+
 const corsOptions = {
-  origin: "https://mapa-git-develop-joao-victors-projects-9e483bff.vercel.app/", // Dominio Frontend permitido
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos HTTP que você permite
-  credentials: true, // Se você estiver usando cookies ou cabeçalhos de autorização
-  optionsSuccessStatus: 204, // Alguns navegadores esperam 204 para pré-voos bem-sucedidos
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(
+        `CORS Error: Origem '${origin}' não está na lista de permitidos.`
+      );
+      callback(new Error("Não permitido pela política de CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions)); // Use a configuração customizada de CORS
