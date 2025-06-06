@@ -31,23 +31,24 @@ app.use(
 );
 app.use(express.json());
 
-const locais = require(path.join(__dirname, "locais.json"));
+// Função para buscar locais da tabela dbo.Pontos
+async function obterLocaisDoBanco() {
+  const pool = await connect();
+  const result = await pool
+    .request()
+    .query("SELECT nome, latitude, longitude FROM dbo.Pontos");
+  const locais = {};
+  result.recordset.forEach((row) => {
+    locais[row.nome] = [row.latitude, row.longitude];
+  });
+  return locais;
+}
 
-app.get("/api/locais", (req, res) => {
-  res.json(locais);
-});
+// Inicializa os locais do banco de dados
+const locais = await obterLocaisDoBanco();
 
 function normalizarNomeLocal(nome, locais) {
   if (!nome || typeof nome !== "string") return null;
-
-  if (
-    Array.isArray(nome) &&
-    nome.length === 2 &&
-    typeof nome[0] === "number" &&
-    typeof nome[1] === "number"
-  ) {
-    return nome;
-  }
 
   const coordMatch = nome.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
   if (coordMatch) {
@@ -90,6 +91,16 @@ function normalizarNomeLocal(nome, locais) {
 
   return null;
 }
+
+app.get("/api/locais", async (req, res) => {
+  try {
+    const locais = await obterLocaisDoBanco();
+    res.json(locais);
+  } catch (error) {
+    console.error("Erro ao buscar locais:", error);
+    res.status(500).json({ error: "Erro ao buscar locais do banco" });
+  }
+});
 
 app.post("/api/rota", async (req, res) => {
   try {
