@@ -3,7 +3,7 @@
 Sistema de mapeamento inteligente e interativo para auxiliar na localização de salas, prédios e setores dentro do campus universitário.
 
 > 🔗 **Acesse a demonstração:**  
-> 👉 [https://mapa-two.vercel.app](https://mapa-two.vercel.app){:target="_blank"}
+> 👉 <a href="[https://www.exemplo.com](https://mapa-two.vercel.app)" target="_blank">https://mapa-two.vercel.app</a>
 
 ---
 
