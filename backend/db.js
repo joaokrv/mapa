@@ -1,5 +1,7 @@
-const sql = require("mssql");
-require("dotenv").config();
+import sql from "mssql";
+import dotenv from "dotenv";
+
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 const config = {
   user: process.env.DB_USER,
@@ -13,19 +15,20 @@ const config = {
   },
 };
 
-let poolPromise;
+let poolPromise; // Mantém a pool de conexão para reutilização
 
-async function connect() {
+export async function connect() {
+  // Use 'export' aqui!
   if (!poolPromise) {
     try {
       poolPromise = await sql.connect(config);
       console.log("Conectado ao banco de dados!");
     } catch (err) {
       console.error("Erro ao conectar:", err);
+      // Se a conexão falhar, resetamos poolPromise para permitir uma nova tentativa
+      poolPromise = null;
       throw err;
     }
   }
   return poolPromise;
 }
-
-module.exports = { connect };

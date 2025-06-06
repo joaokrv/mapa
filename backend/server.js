@@ -1,8 +1,8 @@
-const path = require("path");
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
-const { connect } = require("./db");
+import path from "path";
+import express from "express";
+import cors from "cors";
+import axios from "axios";
+import { connect } from "./db.js";
 
 const app = express();
 
