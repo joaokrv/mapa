@@ -10,6 +10,7 @@ const allowedOrigins = [
   "http://127.0.0.1:5500", // local frontend
   "https://mapa-unibh-backend.onrender.com", // Render backend
   "https://mapa-two.vercel.app/", // Vercel frontend
+  "https://mapa-two.vercel.app" // Vercel link alternativo
 ];
 
 app.use(
