@@ -1,12 +1,35 @@
 const path = require("path");
 const express = require("express");
-const cors = require("cors");
+//const cors = require("cors");
 const axios = require("axios");
 const { connect } = require("./db");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "https://mapa-two.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(
+        `CORS Error: Origem '${origin}' não está na lista de permitidos.`
+      );
+      callback(new Error("Não permitido pela política de CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions)); // Use a configuração customizada de CORS
 app.use(express.json());
 
 // Função para buscar locais da tabela dbo.Pontos
