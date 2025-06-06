@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
@@ -5,7 +6,14 @@ const { connect } = require("./db");
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://mapa-two.vercel.app", // Dominio Frontend permitido
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos HTTP que você permite
+  credentials: true, // Se você estiver usando cookies ou cabeçalhos de autorização
+  optionsSuccessStatus: 204, // Alguns navegadores esperam 204 para pré-voos bem-sucedidos
+};
+
+app.use(cors(corsOptions)); // Use a configuração customizada de CORS
 app.use(express.json());
 
 // Função para buscar locais da tabela dbo.Pontos
@@ -91,6 +99,7 @@ app.get("/api/locais", async (req, res) => {
 app.post("/api/rota", async (req, res) => {
   try {
     const { origem, destino } = req.body;
+
     const locais = await obterLocaisDoBanco();
 
     const coordOrigem = normalizarNomeLocal(origem, locais);
