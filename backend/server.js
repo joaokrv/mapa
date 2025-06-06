@@ -7,7 +7,7 @@ const { connect } = require("./db");
 const app = express();
 
 const corsOptions = {
-  origin: "https://mapa-two.vercel.app", // Dominio Frontend permitido
+  origin: "https://mapa-git-develop-joao-victors-projects-9e483bff.vercel.app/", // Dominio Frontend permitido
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos HTTP que você permite
   credentials: true, // Se você estiver usando cookies ou cabeçalhos de autorização
   optionsSuccessStatus: 204, // Alguns navegadores esperam 204 para pré-voos bem-sucedidos
