@@ -6,7 +6,28 @@ const { connect } = require("./db");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://127.0.0.1:5500", // local frontend
+  "https://mapa-unibh-backend.onrender.com", // Render backend
+  "https://mapa-two.vercel.app/", // Vercel frontend
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "OPTIONS"], // Allow HTTP methods
+    allowedHeaders: ["Content-Type"], // Allow headers
+    credentials: true, // Allow cookies if needed
+  })
+);
 app.use(express.json());
 
 // Função para buscar locais da tabela dbo.Pontos
@@ -22,17 +43,8 @@ async function obterLocaisDoBanco() {
   return locais;
 }
 
-// Rota temporária para testar se está pegando os dados da tabela dbo.Pontos
-app.get("/api/test-pontos", async (req, res) => {
-  try {
-    const pool = await connect();
-    const result = await pool.request().query("SELECT * FROM dbo.Pontos");
-    res.json(result.recordset);
-  } catch (error) {
-    console.error("Erro ao buscar pontos:", error);
-    res.status(500).json({ error: "Erro ao buscar pontos do banco" });
-  }
-});
+// Inicializa os locais do banco de dados
+const locais = await obterLocaisDoBanco();
 
 function normalizarNomeLocal(nome, locais) {
   if (!nome || typeof nome !== "string") return null;
@@ -93,8 +105,6 @@ app.post("/api/rota", async (req, res) => {
   try {
     const { origem, destino } = req.body;
 
-    const locais = await obterLocaisDoBanco();
-
     const coordOrigem = normalizarNomeLocal(origem, locais);
     const coordDestino = normalizarNomeLocal(destino, locais);
 
@@ -151,19 +161,6 @@ app.get("/api/buscar-local", async (req, res) => {
     res.json(data[0] || null);
   } catch (error) {
     res.status(500).json({ error: "Erro na busca" });
-  }
-});
-
-app.get("/api/test-db", async (req, res) => {
-  try {
-    const pool = await connect();
-    const result = await pool.request().query("SELECT 1 as teste");
-    res.json(result.recordset);
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .json({ error: "Erro ao acessar banco", detalhes: err.message });
   }
 });
 
