@@ -100,7 +100,7 @@ function selecionarLocal(nome, campo) {
   const nextField = campo === "origem" ? "destino" : "origem";
   document.getElementById(nextField).focus();
 
-  // Fecha o menu em mobile (opcional)
+  // Fecha o menu em mobile
   if (window.innerWidth < 768) {
     document.getElementById("search-box").classList.remove("aberto");
     document.getElementById("toggle-search").textContent = "☰ Busca";
@@ -330,8 +330,10 @@ function detectarDispositivo() {
 
 // Função para compartilhar a localização via WhatsApp
 function compartilharLocalizacao() {
+
   // Verifica se o navegador suporta a API de Geolocalização
   if (navigator.geolocation) {
+
     // Tenta obter a posição atual do usuário
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -405,8 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Adiciona evento de clique ao botão de calcular rota
   document.getElementById("calcRota").addEventListener("click", calcularRota);
 
-  // === CORREÇÃO AQUI ===
-  // Declare e inicialize shareButton AQUI
+  // shareButton AQUI
   const shareButton = document.getElementById("toggle-share");
 
   // Adiciona evento de clique ao botão de compartilhar localização
@@ -415,7 +416,6 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     console.warn("Elemento com ID 'toggle-share' não encontrado no DOM.");
   }
-  // === FIM DA CORREÇÃO ===
 
   // Adiciona evento de clique ao botão de fechar (o "X")
   const searchBox = document.getElementById("search-box");
