@@ -105,7 +105,6 @@ function setupLocalSelection() {
 }
 
 // Executa setupHelpButton quando o DOM é carregado.
-// Esta linha pode ser movida para o evento DOMContentLoaded principal para centralizar.
 window.addEventListener("DOMContentLoaded", setupHelpButton);
 
 // Preenche um campo de input com o nome do local e foca no próximo campo.
