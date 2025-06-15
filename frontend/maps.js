@@ -72,6 +72,8 @@ function ajustarMapa() {
   }
 }
 
+// --- Configuração de Botões e Eventos ---
+
 // Comportamento do botão que abre/fecha o menu de busca.
 function setupToggleMenu() {
   document
@@ -104,6 +106,13 @@ function setupLocalSelection() {
   });
 }
 
+// Configura o botão de limpar rota atual do mapa.
+function setupClearRouteButton() {
+  document
+    .getElementById("toggle-route")
+    .addEventListener("click", limparRota); // Adiciona evento de clique para limpar a rota
+}
+
 // Executa setupHelpButton quando o DOM é carregado.
 window.addEventListener("DOMContentLoaded", setupHelpButton);
 
@@ -132,6 +141,19 @@ function setupGPSButtons() {
     icon.addEventListener("click", function () {
       const campo = this.getAttribute("data-campo"); // Pega qual campo preencher (origem/destino)
       buscarLocalizacaoAtual(campo); // Busca e preenche a localização atual
+    });
+  });
+}
+
+// Configura o botão de limpar campos de origem/destino.
+function setupClearFieldsButton() {
+  // Seleciona todos os spans com a classe 'clear-input-icon'
+  document.querySelectorAll(".clear-input-icon").forEach((btn) => {
+    // Adiciona um 'click listener' a cada botão
+    btn.addEventListener("click", function () {
+      // Pega o ID do input alvo do atributo 'data-target'
+      const campoId = this.getAttribute("data-target");
+      limparCampo(campoId); // Chama a função para limpar o campo
     });
   });
 }
@@ -197,7 +219,8 @@ async function buscarLocalizacaoAtual(campo) {
     if (MAP_CONFIG.bounds.contains(localizacaoAtual)) {
       L.marker(localizacaoAtual, {
         icon: L.icon({
-          iconUrl: "https://cdn-icons-png.flaticon.com/512/535/535137.png",
+          iconUrl: './mymarker.png', // ícone do marcador
+          iconAnchor: [15, 30], // Ponto de ancoragem do ícone
           iconSize: [30, 30],
         }),
       })
@@ -230,15 +253,10 @@ function handleGeolocationError(erro, campo) {
 
 // Cria um marcador personalizado (origem ou destino) no mapa.
 function criarMarcador(posicao, tipo) {
-  // Define o ícone do marcador com base no tipo (origem ou destino)
-  const iconeUrl =
-    tipo === "origem"
-      ? "https://cdn-icons-png.flaticon.com/512/1912/1912182.png" // Ícone para origem
-      : "https://cdn-icons-png.flaticon.com/512/2776/2776067.png"; // Ícone para destino
 
   return L.marker(posicao, {
     icon: L.icon({
-      iconUrl: iconeUrl,
+      iconUrl: './marker.png', // ícone do marcador
       iconSize: [48, 48],    // Tamanho do ícone
       iconAnchor: [24, 48],  // Ponto de ancoragem do ícone
       popupAnchor: [0, -48], // Ponto de ancoragem do popup
@@ -360,6 +378,17 @@ async function getCoordinates(local) {
   }
 }
 
+// Função com button para limpar a rota atual do mapa.
+function limparRota() {
+  if (currentRoute) {
+    // Remove a rota e os marcadores do mapa
+    map.removeLayer(currentRoute.linhaContorno);
+    map.removeLayer(currentRoute.linhaPrincipal);
+    currentRoute.marcadores.forEach((m) => map.removeLayer(m));
+    currentRoute = null; // Reseta a rota atual
+  }
+}
+
 // Detecta o tipo de dispositivo (mobile vs. desktop) e ajusta a visibilidade do botão de GPS.
 function detectarDispositivo() {
   const isMobile =
@@ -438,6 +467,54 @@ function compartilharLocalizacao() {
   }
 }
 
+// --- Função para limpar campo de origem/destino ---
+function limparCampo(campoId) {
+  const input = document.getElementById(campoId);
+  if (input) {
+    input.value = ""; // Limpa o valor do campo
+    input.focus(); // Foca no campo após limpar
+
+    // Oculta o botão de limpar após o campo ser esvaziado
+    const parentDiv = input.closest('.input-with-icon');
+    if (parentDiv) {
+        const clearButton = parentDiv.querySelector('.clear-input-icon');
+        if (clearButton) {
+            clearButton.style.display = 'none'; // Oculta o botão
+        }
+    }
+
+  } else {
+    console.warn(`Campo com ID '${campoId}' não encontrado.`);
+  }
+}
+
+// --- Função para controlar a visibilidade do botão de limpar ---
+function setupClearButtonVisibility() {
+    // Itera sobre todos os inputs que podem ter um botão de limpar associado
+    document.querySelectorAll('.input-with-icon input').forEach(input => {
+        // Encontra o botão de limpar que pertence a este input
+        const clearButton = input.closest('.input-with-icon').querySelector('.clear-input-icon');
+
+        if (clearButton) {
+            // Inicializa a visibilidade do botão ao carregar a página
+            if (input.value.length === 0) {
+                clearButton.style.display = 'none';
+            } else {
+                clearButton.style.display = 'block';
+            }
+
+            // Adiciona um listener para o evento 'input'
+            input.addEventListener('input', () => {
+                if (input.value.length > 0) {
+                    clearButton.style.display = 'block';
+                } else {
+                    clearButton.style.display = 'none';
+                }
+            });
+        }
+    });
+}
+
 // --- Inicialização do DOM e Event Listeners ---
 
 // Garante que o script só execute após o DOM estar completamente carregado.
@@ -450,6 +527,9 @@ document.addEventListener("DOMContentLoaded", () => {
   setupHelpButton();     // Botão de ajuda
   setupLocalSelection(); // Seleção de locais frequentes
   setupGPSButtons();     // Botões de GPS
+  setupClearRouteButton(); // Botão para limpar rota atual
+  setupClearButtonVisibility(); // Configuração de visibilidade do botão de limpar
+  setupClearFieldsButton(); // Botões de limpar campos de origem/destino
   detectarDispositivo(); // Detecta o dispositivo para exibir/esconder o GPS
 
   // Adiciona evento de clique ao botão de calcular rota
