@@ -488,6 +488,36 @@ function limparCampo(campoId) {
   }
 }
 
+// --- Função para controlar a visibilidade do botão de limpar ---
+
+function setupClearButtonVisibility() {
+    // Itera sobre todos os inputs que podem ter um botão de limpar associado
+    document.querySelectorAll('.input-with-icon input').forEach(input => {
+        // Encontra o botão de limpar que pertence a este input
+        const clearButton = input.closest('.input-with-icon').querySelector('.clear-input-icon');
+
+        if (clearButton) {
+            // Função auxiliar para atualizar a visibilidade do botão
+            const updateClearButtonVisibility = () => {
+                if (input.value.length > 0) {
+                    clearButton.style.display = 'block';
+                } else {
+                    clearButton.style.display = 'none';
+                }
+            };
+
+            // Inicializa a visibilidade do botão ao carregar a página
+            updateClearButtonVisibility();
+
+            // Adiciona um listener para o evento 'input' (quando o usuário digita)
+            input.addEventListener('input', updateClearButtonVisibility);
+
+            //  Adiciona um listener para o evento 'change' (quando o valor muda e o campo perde o foco)
+            input.addEventListener('change', updateClearButtonVisibility);
+        }
+    });
+}
+
 // --- Inicialização do DOM e Event Listeners ---
 
 // Garante que o script só execute após o DOM estar completamente carregado.
@@ -502,6 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupGPSButtons();        // Botões de GPS
   setupClearRouteButton();  // Botão para limpar rota atual
   setupClearFieldsButton(); // Botões de limpar campos de origem/destino
+  setupClearButtonVisibility(); // Configuração de visibilidade do botão de limpar
   detectarDispositivo();    // Detecta o dispositivo para exibir/esconder o GPS
 
   // Adiciona evento de clique ao botão de calcular rota
