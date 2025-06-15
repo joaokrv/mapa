@@ -9,23 +9,33 @@ const app = express();
 const allowedOrigins = [
   "http://127.0.0.1:5500", // local frontend
   "https://mapa-unibh-backend.onrender.com", // Render backend
-  "https://mapa-two.vercel.app/", // Vercel frontend
+  "https://mapa-two.vercel.app/", // Vercel frontend (com barra)
+  "https://mapa-two.vercel.app" // Vercel link alternativo (SEM barra)
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
+      // LOG para ver a origem exata que o navegador está enviando
+      console.log("Origem da requisição CORS:", origin); 
+
+      if (!origin) {
+        console.log("Requisição sem origem (permitida)."); // Opcional, para debug
+        return callback(null, true);
+      }
 
       if (allowedOrigins.includes(origin)) {
+        console.log(`Origem ${origin} PERMITIDA.`); // debug
         callback(null, true);
       } else {
+        // LOG para ver qual origem foi explicitamente NÃO PERMITIDA
+        console.error(`Origem ${origin} NÃO PERMITIDA por CORS. Conteúdo de allowedOrigins:`, allowedOrigins); 
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "OPTIONS"], // Allow HTTP methods
-    allowedHeaders: ["Content-Type"], // Allow headers
-    credentials: true, // Allow cookies if needed
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -169,5 +179,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Erro interno no servidor" });
 });
 
-const PORT = process.env.PORT || 3000;
+const LOCAL_PORT = process.env.LOCAL_PORT; // Porta local padrão
+const PORT = process.env.PORT || LOCAL_PORT; // Porta do servidor, se definida no ambiente
+
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

@@ -3,7 +3,7 @@
 Sistema de mapeamento inteligente e interativo para auxiliar na localização de salas, prédios e setores dentro do campus universitário.
 
 > 🔗 **Acesse a demonstração:**  
-> 👉 [https://mapa-two.vercel.app](https://mapa-two.vercel.app)
+> 👉 <a href="https://mapa-two.vercel.app" target="_blank">https://mapa-two.vercel.app</a>
 
 ---
 
@@ -18,12 +18,14 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 
 ---
 
-## 🚀 Funcionalidades planejadas
+## 🚀 Funcionalidades
 
 - 🧭 Cálculo de rotas entre pontos do campus
 - 🔍 Busca inteligente por locais
 - 🧠 Interface amigável e intuitiva
 - 📱 Responsividade para diferentes tamanhos de tela
+- 📍 Compartilhamento de localização via Whatsapp
+- 🌓 Possibilidade de alterar tema entre claro e escuro
 
 ---
 
@@ -35,6 +37,9 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 - 🗺️ [Leaflet.js](https://leafletjs.com/) + [OpenStreetMap](https://www.openstreetmap.org/)
 - 🧭 [OpenRouteService API](https://openrouteservice.org/)
 - 🔙 [Node.js](https://nodejs.org/) (para o backend)
+- 💻 [Vercel](https://vercel.com/) (Hospedagem front)
+- ⚙ [Render](https://render.com/) (Hospedagem back)
+- 🗒 [Planilha de Organização](https://docs.google.com/spreadsheets/d/16uTY1Nag-wBOdr0kcO8LmG3TUV2IrlUwAWtJnOlEDcc/edit?usp=sharing)
 
 ---
 
@@ -102,7 +107,7 @@ Acesse em: http://localhost:<porta>/docs/index.html
 >
 > - O **backend deve estar rodando** para que as funcionalidades funcionem.
 > - O **frontend deve ser acessado via servidor HTTP**, não diretamente pelo navegador.
-> - Verifique se o arquivo **`locais.json`** está presente na pasta `backend`.
+> - O **banco de dados** deve estar linkado corretamente.
 
 ## 👨‍🏫 Professor Orientador
 
@@ -114,8 +119,8 @@ A ideia original do Mapa Faculdade foi concebida por Breno, colega da turma de E
 
 ## 👨‍💻 Autores
 
-Projeto desenvolvido pela turma de Engenharia de Software:
-André, Bernardo, Breno, Eduardo, Guilherme, João Victor, Lay, Maria
+### Projeto desenvolvido pela turma de Engenharia de Software:
+**André, Bernardo, Breno, Eduardo, Guilherme, João Victor, Lay, Maria**
 
 ## 🤝 Contribuição
 
