@@ -197,7 +197,8 @@ async function buscarLocalizacaoAtual(campo) {
     if (MAP_CONFIG.bounds.contains(localizacaoAtual)) {
       L.marker(localizacaoAtual, {
         icon: L.icon({
-          iconUrl: "https://cdn-icons-png.flaticon.com/512/535/535137.png",
+          iconUrl: './mymarker.png', // ícone do marcador
+          iconAnchor: [15, 30], // Ponto de ancoragem do ícone
           iconSize: [30, 30],
         }),
       })
@@ -230,15 +231,10 @@ function handleGeolocationError(erro, campo) {
 
 // Cria um marcador personalizado (origem ou destino) no mapa.
 function criarMarcador(posicao, tipo) {
-  // Define o ícone do marcador com base no tipo (origem ou destino)
-  const iconeUrl =
-    tipo === "origem"
-      ? "https://cdn-icons-png.flaticon.com/512/1912/1912182.png" // Ícone para origem
-      : "https://cdn-icons-png.flaticon.com/512/2776/2776067.png"; // Ícone para destino
 
   return L.marker(posicao, {
     icon: L.icon({
-      iconUrl: iconeUrl,
+      iconUrl: './marker.png', // ícone do marcador
       iconSize: [48, 48],    // Tamanho do ícone
       iconAnchor: [24, 48],  // Ponto de ancoragem do ícone
       popupAnchor: [0, -48], // Ponto de ancoragem do popup

@@ -39,6 +39,7 @@ O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio
 - 🔙 [Node.js](https://nodejs.org/) (para o backend)
 - 💻 [Vercel](https://vercel.com/) (Hospedagem front)
 - ⚙ [Render](https://render.com/) (Hospedagem back)
+- 🗒 [Planilha de Organização](https://docs.google.com/spreadsheets/d/16uTY1Nag-wBOdr0kcO8LmG3TUV2IrlUwAWtJnOlEDcc/edit?usp=sharing)
 
 ---
 
