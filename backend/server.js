@@ -3,7 +3,6 @@ import express from "express";
 import cors from "cors";
 import axios from "axios";
 import { connect } from "./db.js";
-import sql from "mssql";
 
 const app = express();
 
@@ -53,6 +52,9 @@ async function obterLocaisDoBanco() {
   });
   return locais;
 }
+
+// Inicializa os locais do banco de dados
+const locais = await obterLocaisDoBanco();
 
 function normalizarNomeLocal(nome, locais) {
   if (!nome || typeof nome !== "string") return null;
