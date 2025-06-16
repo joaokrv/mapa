@@ -100,7 +100,6 @@ html {
 
 /* Efeito ao passar o mouse no ícone */
 .gps-icon:hover {
-  background: #1a56db;
   color: white;
   /* Efeito de leve crescimento */
   transform: translateY(-50%) scale(1.1);
@@ -123,7 +122,6 @@ html {
 }
 
 .clear-input-icon:hover {
-  background: #dc3545; /* Cor de fundo ao passar o mouse */
   color: white;
   transform: translateY(-50%) scale(1.1);
 }
@@ -262,6 +260,25 @@ datalist option {
   ); /* Garante que não colem nas bordas em telas pequenas */
   padding: 0 10px; /* Espaçamento interno */
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os itens horizontalmente */
+  gap: 10px; /* Espaçamento entre os itens */
+}
+
+/* Estilos dos botões dentro de .buttons-container */
+.buttons-container button {
+  width: 100%; /* Ocupa 100% da largura do .buttons-container */
+  max-width: 280px; /* Limita a largura máxima dos botões */
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 15px; 
+  transition: all 0.3s;
 }
 
 .toggle-ajuda {
@@ -272,8 +289,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -291,8 +306,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -311,8 +324,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 40px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -331,8 +342,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 40px;
-  width: 90%;
   transition: all 0.3s;
 }
 
