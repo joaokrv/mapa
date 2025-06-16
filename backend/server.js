@@ -53,85 +53,94 @@ async function obterLocaisDoBanco() {
   return locais;
 }
 
-// Inicializa os locais do banco de dados
-const locais = await obterLocaisDoBanco();
-
-function normalizarNomeLocal(nome, locais) {
+async function getCoordenadasDoLocal(nome) {
   if (!nome || typeof nome !== "string") return null;
 
-  const coordMatch = nome.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
-  if (coordMatch) {
-    return [parseFloat(coordMatch[1]), parseFloat(coordMatch[2])];
-  }
-
-  let normalizado = nome
-    .replace(/[^\w\sáéíóúâêîôûãõàèìòùç-]/gi, "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-  const locaisKeys = Object.keys(locais);
-
-  for (const key of locaisKeys) {
-    const keyNormalized = key
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
-    if (keyNormalized === normalizado) {
-      return locais[key];
+    const coordMatch = nome.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
+    if (coordMatch) {
+        return [parseFloat(coordMatch[1]), parseFloat(coordMatch[2])];
     }
-  }
 
-  for (const key of locaisKeys) {
-    const keyNormalized = key
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
+    const pool = await connect();
+    const request = pool.request();
 
-    if (
-      keyNormalized.includes(normalizado) ||
-      normalizado.includes(keyNormalized)
-    ) {
-      return locais[key];
+    // Limpeza e normalização para a busca no DB
+    let normalizado = nome
+        .replace(/[^\w\sáéíóúâêîôûãõàèìòùç-]/gi, "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    // Tenta encontrar a correspondência exata primeiro
+    let result = await request
+        .input('normalizado', sql.NVarChar, normalizado)
+        .query("SELECT nome, latitude, longitude FROM dbo.Pontos WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(nome, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'), 'ã', 'a'), 'õ', 'o'), 'ç', 'c'), 'à', 'a'), 'è', 'e'), 'ì', 'i'), 'ò', 'o'), 'ù', 'u')) = @normalizado");
+
+    if (result.recordset.length > 0) {
+        const row = result.recordset[0];
+        return [row.latitude, row.longitude];
     }
-  }
 
-  return null;
+    // Se não encontrou correspondência exata, tenta com LIKE
+    result = await request
+        .input('normalizadoLike', sql.NVarChar, `%${normalizado}%`)
+        .query("SELECT nome, latitude, longitude FROM dbo.Pontos WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(nome, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'), 'ã', 'a'), 'õ', 'o'), 'ç', 'c'), 'à', 'a'), 'è', 'e'), 'ì', 'i'), 'ò', 'o'), 'ù', 'u')) LIKE @normalizadoLike");
+
+    if (result.recordset.length > 0) {
+        const row = result.recordset[0];
+        return [row.latitude, row.longitude];
+    }
+
+    return null;
 }
 
 app.get("/api/locais", async (req, res) => {
-  try {
-    const locais = await obterLocaisDoBanco();
-    res.json(locais);
-  } catch (error) {
-    console.error("Erro ao buscar locais:", error);
-    res.status(500).json({ error: "Erro ao buscar locais do banco" });
-  }
+    try {
+        const pool = await connect();
+        const result = await pool
+            .request()
+            .query("SELECT nome, latitude, longitude FROM dbo.Pontos");
+        const locaisArray = result.recordset.map(row => ({ nome: row.nome, lat: row.latitude, lon: row.longitude }));
+        res.json(locaisArray); // Retorna um array de objetos, não um mapa
+    } catch (error) {
+        console.error("Erro ao buscar locais:", error);
+        res.status(500).json({ error: "Erro ao buscar locais do banco" });
+    }
 });
 
 app.post("/api/rota", async (req, res) => {
   try {
     const { origem, destino } = req.body;
 
-    const coordOrigem = normalizarNomeLocal(origem, locais);
-    const coordDestino = normalizarNomeLocal(destino, locais);
+    const coordOrigem = await getCoordenadasDoLocal(origem);
+    const coordDestino = await getCoordenadasDoLocal(destino);
 
     if (!coordOrigem || !coordDestino) {
-      const sugestoes = {
-        origem: Object.keys(locais).filter((k) =>
-          k.toLowerCase().includes(origem?.toLowerCase() || "")
-        ),
-        destino: Object.keys(locais).filter((k) =>
-          k.toLowerCase().includes(destino?.toLowerCase() || "")
-        ),
-      };
-      return res.status(400).json({
-        error: "Local não encontrado",
-        sugestoes,
-      });
-    }
+      const pool = await connect();
+            const sugestoes = {
+                origem: [],
+                destino: [],
+            };
+
+            if (origem) {
+                const resultOrigem = await pool.request()
+                    .input('origemLike', sql.NVarChar, `%${origem.toLowerCase()}%`)
+                    .query("SELECT nome FROM dbo.Pontos WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(nome, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'), 'ã', 'a'), 'õ', 'o'), 'ç', 'c'), 'à', 'a'), 'è', 'e'), 'ì', 'i'), 'ò', 'o'), 'ù', 'u')) LIKE @origemLike");
+                sugestoes.origem = resultOrigem.recordset.map(row => row.nome);
+            }
+            if (destino) {
+                const resultDestino = await pool.request()
+                    .input('destinoLike', sql.NVarChar, `%${destino.toLowerCase()}%`)
+                    .query("SELECT nome FROM dbo.Pontos WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(nome, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u'), 'ã', 'a'), 'õ', 'o'), 'ç', 'c'), 'à', 'a'), 'è', 'e'), 'ì', 'i'), 'ò', 'o'), 'ù', 'u')) LIKE @destinoLike");
+                sugestoes.destino = resultDestino.recordset.map(row => row.nome);
+            }
+
+            return res.status(400).json({
+                error: "Local não encontrado",
+                sugestoes,
+            });
+        }
 
     const osrmUrl = `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${coordOrigem[1]},${coordOrigem[0]};${coordDestino[1]},${coordDestino[0]}?overview=full&geometries=geojson`;
 
