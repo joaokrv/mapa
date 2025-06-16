@@ -104,7 +104,6 @@ html {
 
 /* Efeito ao passar o mouse no ícone */
 .gps-icon:hover {
-  background: #1a56db;
   color: white;
   /* Efeito de leve crescimento */
   transform: translateY(-50%) scale(1.1);
@@ -127,7 +126,6 @@ html {
 }
 
 .clear-input-icon:hover {
-  background: #dc3545; /* Cor de fundo ao passar o mouse */
   color: white;
   transform: translateY(-50%) scale(1.1);
 }
@@ -265,6 +263,25 @@ datalist option {
   ); /* Garante que não colem nas bordas em telas pequenas */
   padding: 0 10px; /* Espaçamento interno */
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os itens horizontalmente */
+  gap: 10px; /* Espaçamento entre os itens */
+}
+
+/* Estilos dos botões dentro de .buttons-container */
+.buttons-container button {
+  width: 100%; /* Ocupa 100% da largura do .buttons-container */
+  max-width: 280px; /* Limita a largura máxima dos botões */
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 15px; 
+  transition: all 0.3s;
 }
 
 .toggle-ajuda {
@@ -275,8 +292,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -294,8 +309,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -314,8 +327,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 40px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -334,8 +345,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -365,8 +374,7 @@ datalist option {
   justify-content: center; /* Centraliza horizontalmente */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave */
   z-index: 10; /* Garante que fique acima de outros elementos */
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease; /* Transições suaves */
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; /* Transições suaves */
 }
 
 .close-btn:hover {
