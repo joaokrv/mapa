@@ -86,27 +86,43 @@ html {
 .gps-icon {
   /* Posicionamento preciso */
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  /* Interatividade */
   cursor: pointer;
-  /* Estilo visual */
   font-size: 18px;
-  z-index: 2;
-  background: rgba(45, 55, 72, 0.8);
+  z-index: 3;
   color: #e0e0e0;
   padding: 2px 5px;
   border-radius: 50%;
-  /* Transição suave para hover */
   transition: all 0.2s;
 }
 
 /* Efeito ao passar o mouse no ícone */
 .gps-icon:hover {
-  background: #1a56db;
   color: white;
   /* Efeito de leve crescimento */
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Estilos para o botão de limpar input */
+.clear-input-icon {
+  position: absolute;
+  right: 30px; /* Ajuste para não sobrepor o ícone do GPS */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: #e0e0e0; /* Cor do X */
+  padding: 2px 6px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: block; /* Oculta por padrão e será mostrado via JavaScript */
+  z-index: 3; /* Garante que fique acima do input e do ícone do GPS */
+}
+
+.clear-input-icon:hover {
+  color: white;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -243,6 +259,25 @@ datalist option {
   ); /* Garante que não colem nas bordas em telas pequenas */
   padding: 0 10px; /* Espaçamento interno */
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os itens horizontalmente */
+  gap: 10px; /* Espaçamento entre os itens */
+}
+
+/* Estilos dos botões dentro de .buttons-container */
+.buttons-container button {
+  width: 100%; /* Ocupa 100% da largura do .buttons-container */
+  max-width: 280px; /* Limita a largura máxima dos botões */
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 15px;
+  transition: all 0.3s;
 }
 
 .toggle-ajuda {
@@ -253,8 +288,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -272,8 +305,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -292,13 +323,29 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 40px;
-  width: 90%;
   transition: all 0.3s;
 }
 
 /* Efeito hover do botão de compartilhar localização */
 .share-location:hover {
+  transform: scale(1.02);
+  background: #143ba9;
+}
+
+/* Efeitos botão limpar rota */
+.toggle-route {
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 6px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+/* Efeito hover do botão de limpar rota */
+.toggle-route:hover {
   transform: scale(1.02);
   background: #143ba9;
 }
@@ -334,9 +381,8 @@ datalist option {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada */
 }
 
-/* Para o caso de usar um ícone (Font Awesome, por exemplo) */
 .close-btn i {
-  font-size: 16px; /* Ajuste o tamanho do ícone se o "X" for um Font Awesome */
+  font-size: 16px;
 }
 
 /* Caixa de inputs (estado padrão - recolhido) */
@@ -354,12 +400,9 @@ datalist option {
   overflow: hidden;
   opacity: 0;
 
-  /* Novas propriedades para garantir que não seja clicável e não interfira */
+  /* Garantir que não seja clicável e não interfira */
   visibility: hidden; /* Oculta visualmente e remove da árvore de acessibilidade */
-  pointer-events: none; /* **CRUCIAL:** Impede que intercepte eventos de clique */
-
-  /* Removido o padding: 15px; daqui */
-  /* Para controlar o padding quando aberto, coloque-o na classe .aberto */
+  pointer-events: none;
   padding: 0 15px; /* Define padding horizontal, vertical será controlado pelo max-height */
 }
 
@@ -395,16 +438,18 @@ datalist option {
 /* Container para inputs com ícone */
 .input-with-icon {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 /* Input com ícone */
 .input-with-icon input {
   width: 100%;
-  padding: 10px 35px 10px 10px;
+  padding: 10px 60px 10px 10px;
   border: 1px solid #4a5568;
   border-radius: 4px;
-  color: #e0e0e0; /* Lighter text for inputs */
-  background-color: #2d3748; /* Darker background for inputs */
+  color: #e0e0e0;
+  background-color: #2d3748;
 }
 
 /* Lista de locais frequentes */

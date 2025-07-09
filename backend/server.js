@@ -1,12 +1,46 @@
-const path = require("path");
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
-const { connect } = require("./db");
+import path from "path";
+import express from "express";
+import cors from "cors";
+import axios from "axios";
+import { connect } from "./db.js";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://127.0.0.1:5500", // local frontend
+  "https://mapa-unibh-backend.onrender.com", // Render backend
+  "https://mapa-two.vercel.app/", // Vercel frontend (com barra)
+  "https://mapa-two.vercel.app", // Vercel link alternativo (SEM barra)
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // LOG para ver a origem exata que o navegador está enviando
+      console.log("Origem da requisição CORS:", origin);
+
+      if (!origin) {
+        console.log("Requisição sem origem (permitida)."); // Opcional, para debug
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        console.log(`Origem ${origin} PERMITIDA.`); // debug
+        callback(null, true);
+      } else {
+        // LOG para ver qual origem foi explicitamente NÃO PERMITIDA
+        console.error(
+          `Origem ${origin} NÃO PERMITIDA por CORS. Conteúdo de allowedOrigins:`,
+          allowedOrigins
+        );
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Função para buscar locais da tabela dbo.Pontos
@@ -22,17 +56,8 @@ async function obterLocaisDoBanco() {
   return locais;
 }
 
-// Rota temporária para testar se está pegando os dados da tabela dbo.Pontos
-app.get("/api/test-pontos", async (req, res) => {
-  try {
-    const pool = await connect();
-    const result = await pool.request().query("SELECT * FROM dbo.Pontos");
-    res.json(result.recordset);
-  } catch (error) {
-    console.error("Erro ao buscar pontos:", error);
-    res.status(500).json({ error: "Erro ao buscar pontos do banco" });
-  }
-});
+// Inicializa os locais do banco de dados
+const locais = await obterLocaisDoBanco();
 
 function normalizarNomeLocal(nome, locais) {
   if (!nome || typeof nome !== "string") return null;
@@ -93,8 +118,6 @@ app.post("/api/rota", async (req, res) => {
   try {
     const { origem, destino } = req.body;
 
-    const locais = await obterLocaisDoBanco();
-
     const coordOrigem = normalizarNomeLocal(origem, locais);
     const coordDestino = normalizarNomeLocal(destino, locais);
 
@@ -154,23 +177,12 @@ app.get("/api/buscar-local", async (req, res) => {
   }
 });
 
-app.get("/api/test-db", async (req, res) => {
-  try {
-    const pool = await connect();
-    const result = await pool.request().query("SELECT 1 as teste");
-    res.json(result.recordset);
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .json({ error: "Erro ao acessar banco", detalhes: err.message });
-  }
-});
-
 app.use((err, req, res, next) => {
   console.error("Erro não tratado:", err);
   res.status(500).json({ error: "Erro interno no servidor" });
 });
 
-const PORT = process.env.PORT || 3000;
+const LOCAL_PORT = process.env.LOCAL_PORT; // Porta local padrão
+const PORT = process.env.PORT || LOCAL_PORT; // Porta do servidor, se definida no ambiente
+
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

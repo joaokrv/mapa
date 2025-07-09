@@ -95,8 +95,7 @@ html {
   cursor: pointer;
   /* Estilo visual */
   font-size: 18px;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.8);
+  z-index: 3;
   padding: 2px 5px;
   border-radius: 50%;
   /* Transição suave para hover */
@@ -105,9 +104,29 @@ html {
 
 /* Efeito ao passar o mouse no ícone */
 .gps-icon:hover {
-  background: #1a56db;
   color: white;
   /* Efeito de leve crescimento */
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Estilos para o botão de limpar input */
+.clear-input-icon {
+  position: absolute;
+  right: 30px; /* Ajuste para não sobrepor o ícone do GPS */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: #e0e0e0; /* Cor do X */
+  padding: 2px 6px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: block; /* Oculta por padrão e será mostrado via JavaScript */
+  z-index: 3; /* Garante que fique acima do input e do ícone do GPS */
+}
+
+.clear-input-icon:hover {
+  color: white;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -244,6 +263,25 @@ datalist option {
   ); /* Garante que não colem nas bordas em telas pequenas */
   padding: 0 10px; /* Espaçamento interno */
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza os itens horizontalmente */
+  gap: 10px; /* Espaçamento entre os itens */
+}
+
+/* Estilos dos botões dentro de .buttons-container */
+.buttons-container button {
+  width: 100%; /* Ocupa 100% da largura do .buttons-container */
+  max-width: 280px; /* Limita a largura máxima dos botões */
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 15px;
+  transition: all 0.3s;
 }
 
 .toggle-ajuda {
@@ -254,8 +292,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -273,8 +309,6 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 15px;
-  width: 90%;
   transition: all 0.3s;
 }
 
@@ -293,13 +327,29 @@ datalist option {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 40px;
-  width: 90%;
   transition: all 0.3s;
 }
 
 /* Efeito hover do botão de compartilhar localização */
 .share-location:hover {
+  transform: scale(1.02);
+  background: #143ba9;
+}
+
+/* Efeitos botão limpar rota */
+.toggle-route {
+  background: #1a56db;
+  color: white;
+  border: none;
+  padding: 6px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+/* Efeito hover do botão de limpar rota */
+.toggle-route:hover {
   transform: scale(1.02);
   background: #143ba9;
 }
@@ -390,12 +440,14 @@ datalist option {
 /* Container para inputs com ícone */
 .input-with-icon {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 /* Input com ícone */
 .input-with-icon input {
   width: 100%;
-  padding: 10px 35px 10px 10px;
+  padding: 10px 60px 10px 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
