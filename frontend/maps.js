@@ -405,8 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Adiciona evento de clique ao botão de calcular rota
   document.getElementById("calcRota").addEventListener("click", calcularRota);
 
-  // === CORREÇÃO AQUI ===
-  // Declare e inicialize shareButton AQUI
+  // shareButton
   const shareButton = document.getElementById("toggle-share");
 
   // Adiciona evento de clique ao botão de compartilhar localização
@@ -415,7 +414,6 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     console.warn("Elemento com ID 'toggle-share' não encontrado no DOM.");
   }
-  // === FIM DA CORREÇÃO ===
 
   // Adiciona evento de clique ao botão de fechar (o "X")
   const searchBox = document.getElementById("search-box");
