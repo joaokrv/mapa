@@ -20,7 +20,7 @@ app.use(
       console.log("Origem da requisição CORS:", origin);
 
       if (!origin) {
-        console.log("Requisição sem origem (permitida)."); // Opcional, para debug
+        console.log("Requisição sem origem (permitida)."); // para debug
         return callback(null, true);
       }
 
