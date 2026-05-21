@@ -1,152 +1,239 @@
-/* style-ajuda-light.css */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* =============================================
+   AJUDA — TEMA CLARO
+   ============================================= */
+:root {
+  --bg-base:         #f0f4fb;
+  --bg-surface:      #ffffff;
+  --bg-subtle:       #f8fafc;
+  --border:          #e2e8f0;
+  --header-bg:       rgba(26, 86, 219, 1);
+  --text-primary:    #0f172a;
+  --text-secondary:  #475569;
+  --text-muted:      #94a3b8;
+  --accent:          #1a56db;
+  --accent-light:    #3b72f0;
+  --accent-glow:     rgba(26, 86, 219, 0.14);
+  --card-title:      #1a56db;
+  --back-text:       #1a56db;
+  --back-bg:         rgba(255,255,255,0.95);
+  --theme-btn-color: rgba(255,255,255,0.85);
 }
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
-  margin: 0;
-  font-family: 'Rubik', sans-serif;
-  background: #E9F7FF; /* Fundo claro principal */
-  color: #002E5D;      /* Cor de texto principal (azul escuro) */
+  background: var(--bg-base);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text-secondary);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Botão de Voltar */
+/* --- Header --- */
+header {
+  background: var(--header-bg);
+  padding: 16px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 16px rgba(26,86,219,0.25);
+}
+
+header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+  flex: 1;
+  text-align: center;
+}
+
+/* botão voltar */
 .voltar {
   position: fixed;
-  top: 1rem; /* Use 'rem' para consistência */
-  left: 1rem;
-  background: #00B0C0; /* Ciano vibrante */
-  color: white;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
+  top: 11px;
+  left: 16px;
+  background: var(--back-bg);
+  color: var(--back-text);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 7px 13px;
+  border-radius: 9px;
   text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s ease;
-  z-index: 1000; /* Garante que fique acima de outros conteúdos */
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: inherit;
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
 }
-
 .voltar:hover {
-  background: #008A9E; /* Ciano mais escuro no hover */
+  background: #fff;
+  transform: translateX(-2px);
+  box-shadow: 0 3px 12px rgba(26,86,219,0.15);
 }
 
-/* Cabeçalho */
-header {
-  background: #002E5D; /* Azul escuro para o cabeçalho */
-  color: white;
-  padding: 1rem;
-  text-align: center;
+/* botão tema — fixo no canto superior direito */
+.theme-toggle-button {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--accent);
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 1;
+  z-index: 300;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease;
+}
+.theme-toggle-button:hover {
+  background: var(--accent-light);
+  box-shadow: 0 6px 20px var(--accent-glow);
+  transform: scale(1.06);
 }
 
-/* Container principal de conteúdo */
+/* --- Conteúdo --- */
 .container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: auto;
-  /* Não precisa de background aqui, pois o container é para o layout geral, não para os cards */
+  padding: 32px 24px 56px;
+  max-width: 1080px;
+  margin: 0 auto;
 }
 
-/* Seções de introdução e outros textos */
 .intro {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 36px;
+  animation: fadeUp 0.45s ease both;
 }
 
 .intro h2 {
-  color: #00B0C0; /* Ciano vibrante para títulos de introdução */
-  font-size: 2rem;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  margin-bottom: 8px;
 }
 
-/* Layout dos cards */
+.intro p {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+}
+
+/* --- Cards --- */
 .steps, .extra {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 14px;
   justify-content: center;
 }
 
-/* Estilo individual do Card */
 .card {
-  background: white; /* Fundo branco para os cards */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra suave */
-  padding: 1rem;
-  flex: 1 1 280px; /* Base para flexibilidade e tamanho */
-  max-width: 350px;
-  color: #333; /* Cor do texto padrão dentro do card */
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  flex: 1 1 250px;
+  max-width: 310px;
+  color: var(--text-secondary);
+  animation: fadeUp 0.45s ease both;
+  transition: border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  position: relative;
+  overflow: hidden;
 }
 
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20px; right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(26,86,219,0.30);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px var(--accent-glow);
+}
+
+.card:hover::before { opacity: 1; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.steps .card:nth-child(1) { animation-delay: 0.05s; }
+.steps .card:nth-child(2) { animation-delay: 0.10s; }
+.steps .card:nth-child(3) { animation-delay: 0.15s; }
+.steps .card:nth-child(4) { animation-delay: 0.20s; }
+.steps .card:nth-child(5) { animation-delay: 0.25s; }
+.extra .card:nth-child(1) { animation-delay: 0.30s; }
+.extra .card:nth-child(2) { animation-delay: 0.35s; }
+
 .card h3 {
-  color: #005EA6; /* Azul médio para títulos dos cards */
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--card-title);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
 }
 
 .card img {
   width: 100%;
-  border-radius: 8px;
-  margin: 0.5rem 0;
+  border-radius: 9px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid var(--border);
 }
 
-.card p {
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
+.card p { font-size: 13px; line-height: 1.65; }
+.card p + p { margin-top: 8px; }
+.card strong { color: var(--text-primary); }
 
-/* Texto de agradecimento */
+/* --- Agradecimento --- */
 .thank-you {
   text-align: center;
-  margin-top: 3rem;
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: #008A9E; /* Ciano escuro */
+  margin-top: 44px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  animation: fadeUp 0.45s 0.40s ease both;
 }
 
-/* Rodapé */
+/* --- Footer --- */
 footer {
-  background: #002E5D; /* Azul escuro para o rodapé */
-  color: white;
+  background: var(--header-bg);
+  color: rgba(255,255,255,0.65);
   text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
+  padding: 16px 24px;
+  margin-top: 48px;
+  font-size: 12.5px;
 }
 
-/* Media Queries (importante replicar em ambos os arquivos) */
 @media (max-width: 768px) {
-  .card {
-    max-width: 100%;
-  }
-
-  .intro h2 {
-    font-size: 1.5rem;
-  }
+  header h1 { font-size: 13px; }
+  .card { max-width: 100%; }
+  .intro h2 { font-size: 20px; }
 }
 
 @media (max-width: 480px) {
-  .voltar {
-    top: 0.5rem;
-    left: 0.5rem;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.9rem;
-  }
-  .container {
-    padding: 1rem;
-  }
-  header h1 {
-    font-size: 1.5rem;
-  }
-  .intro h2 {
-    font-size: 1.2rem;
-  }
-  .card h3 {
-    font-size: 1rem;
-  }
-  .card p {
-    font-size: 0.9rem;
-  }
-  .thank-you {
-    font-size: 1.1rem;
-  }
+  header { padding: 14px 50px 14px 68px; }
+  .container { padding: 24px 16px 44px; }
+  .voltar { top: 9px; left: 12px; }
 }

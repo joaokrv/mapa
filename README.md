@@ -1,132 +1,83 @@
-# 🗺️ Mapa Faculdade
+# Mapa Interativo — UniBH
 
-Sistema de mapeamento inteligente e interativo para auxiliar na localização de salas, prédios e setores dentro do campus universitário.
+Sistema de navegação interativa para o campus da UniBH. Permite calcular rotas a pé entre qualquer ponto do campus, com busca inteligente, temas claro/escuro e compartilhamento de localização.
 
-> 🔗 **Acesse a demonstração:**  
-> 👉 <a href="https://mapa-two.vercel.app" target="_blank">https://mapa-two.vercel.app</a>
-
----
-
-## 🎯 Objetivo
-
-O **Mapa Faculdade** tem como missão facilitar a locomoção no campus por meio de um sistema acessível e eficiente, ideal para:
-
-- 🧑‍🎓 Calouros e veteranos
-- 👩‍🏫 Professores
-- 👥 Visitantes
-- 📍 Qualquer pessoa que deseje encontrar rapidamente seu destino dentro da faculdade
+> **Demo:** [mapa-two.vercel.app](https://mapa-two.vercel.app)
 
 ---
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
-- 🧭 Cálculo de rotas entre pontos do campus
-- 🔍 Busca inteligente por locais
-- 🧠 Interface amigável e intuitiva
-- 📱 Responsividade para diferentes tamanhos de tela
-- 📍 Compartilhamento de localização via Whatsapp
-- 🌓 Possibilidade de alterar tema entre claro e escuro
+- Cálculo de rotas pedestres entre pontos do campus via OSRM
+- Busca e autocomplete de locais sincronizados com o backend
+- Tema claro e escuro com transição animada
+- Compartilhamento de localização via WhatsApp
+- GPS para preencher origem automaticamente
+- Interface responsiva para mobile e desktop
+
+## Stack
+
+| Camada | Tecnologia |
+|--------|-----------|
+| Frontend | HTML5 · CSS3 · JavaScript (ES Modules) |
+| Mapas | [Leaflet.js 1.9.4](https://leafletjs.com/) + [OpenStreetMap](https://www.openstreetmap.org/) |
+| Roteamento | [OSRM](https://routing.openstreetmap.de/) (pedestres, gratuito) |
+| Geocoding | [Nominatim](https://nominatim.openstreetmap.org/) |
+| Backend | Node.js · Express 5 |
+| Deploy frontend | [Vercel](https://vercel.com/) |
+| Deploy backend | [Render](https://render.com/) |
+
+## Como rodar localmente
+
+### Backend
+
+```bash
+cd backend
+npm install
+node server.js
+# servidor em http://localhost:3000
+```
+
+**Endpoints disponíveis:**
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/api/health` | Status do servidor |
+| `GET` | `/api/locais` | Lista todos os pontos do campus |
+| `POST` | `/api/rota` | Calcula rota entre origem e destino |
+| `GET` | `/api/buscar-local?local=` | Geocoding via Nominatim |
+
+Os pontos do campus ficam em `backend/locais.json` — sem necessidade de banco de dados.
+
+### Frontend
+
+```bash
+cd frontend
+npx http-server -p 5500
+# acesse http://127.0.0.1:5500
+```
+
+> O backend precisa estar rodando para que a busca e as rotas funcionem.
+
+## Adicionar ou editar pontos
+
+Edite `backend/locais.json` diretamente. O formato é:
+
+```json
+{
+  "nome do local": [latitude, longitude]
+}
+```
+
+O frontend sincroniza os chips e o autocomplete automaticamente ao carregar.
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+## Autoria e contribuições
 
-- 🌐 [HTML5](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
-- 🎨 [CSS3](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
-- ⚙️ [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
-- 🗺️ [Leaflet.js](https://leafletjs.com/) + [OpenStreetMap](https://www.openstreetmap.org/)
-- 🧭 [OpenRouteService API](https://openrouteservice.org/)
-- 🔙 [Node.js](https://nodejs.org/) (para o backend)
-- 💻 [Vercel](https://vercel.com/) (Hospedagem front)
-- ⚙ [Render](https://render.com/) (Hospedagem back)
-- 🗒 [Planilha de Organização](https://docs.google.com/spreadsheets/d/16uTY1Nag-wBOdr0kcO8LmG3TUV2IrlUwAWtJnOlEDcc/edit?usp=sharing)
+Projeto iniciado pela turma de Engenharia de Software (5º período) do UniBH, sob orientação do professor Fabrício Valadares. A ideia original foi de Breno Yohan.
 
----
+**Turma fundadora:** André · Bernardo · Breno · Eduardo · Guilherme · Laysla · Marian · João Victor
 
-## 💡 Público-alvo
-
-- Estudantes (novatos e veteranos)
-- Professores e funcionários
-- Visitantes e prestadores de serviço
-- Qualquer pessoa que deseje se orientar dentro do campus
-
----
-
-## 📱 Plataforma
-
-Este projeto é uma **aplicação web responsiva**, com plano futuro de expansão para dispositivos móveis.
-
----
-
-## 🔧 Como executar localmente
-
-### 🖥️ Backend
-
-1. **Instale as dependências:**
-
-   ```bash
-   cd backend
-   npm install
-   ```
-
-2. **Inicie o servidor:**
-
-   ```bash
-   node server.js
-   ```
-
-3. **Verifique o funcionamento:**
-
-- O servidor estará rodando em: http://localhost:3000
-
-- Rotas disponíveis:
-  - GET /api/locais — Lista todos os locais disponíveis
-  - GET /api/buscar-local?local=NOME_DO_LOCAL — Busca coordenadas de um local específico
-  - POST /api/rota — Calcula rota entre origem e destino
-
-### 🌐 Frontend
-
-Após iniciar o backend, abra o frontend:
-
-1. **Opção 1 — VS Code + Live Server**
-
-- Instale a extensão Live Server
-- Clique com o botão direito no arquivo frontend/docs/index.html
-- Selecione "Open with Live Server"
-
-2. **Opção 2 — HTTP Server (via terminal)**
-
-   ```bash
-   cd frontend
-   npx http-server
-   ```
-
-Acesse em: http://localhost:<porta>/docs/index.html
-
-> ⚠️ **Importante:**
->
-> - O **backend deve estar rodando** para que as funcionalidades funcionem.
-> - O **frontend deve ser acessado via servidor HTTP**, não diretamente pelo navegador.
-> - O **banco de dados** deve estar linkado corretamente.
-
-## 👨‍🏫 Professor Orientador
-
-Este projeto está sendo desenvolvido sob orientação do professor Fabrício Valadares, no curso de Engenharia de Software.
-
-## 🧠 Idealização
-
-A ideia original do Mapa Faculdade foi concebida por Breno, colega da turma de Engenharia de Software.
-
-## 👨‍💻 Autores
-
-### Projeto desenvolvido pela turma de Engenharia de Software:
-**André, Bernardo, Breno, Eduardo, Guilherme, João Victor, Lay, Maria**
-
-## 🤝 Contribuição
-
-Este projeto foi desenvolvido em equipe com foco na aplicação prática de:
-
-- Metodologias ágeis
-- Usabilidade e acessibilidade
-- Design centrado no usuário
-- Integração entre frontend e backend
+**Desenvolvimento contínuo e manutenção:** [João Victor Carvalho](https://github.com/joaokrv)
+— Responsável pela refatoração do backend (remoção da dependência MSSQL, migração para JSON local), redesign completo da interface (glassmorphism, sistema de temas, action bar, animações), sistema de autocomplete dinâmico, correções de CORS e performance geral.

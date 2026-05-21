@@ -1,131 +1,193 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* =============================================
+   INDEX — TEMA CLARO
+   ============================================= */
+:root {
+  --bg-base:         #f0f4fb;
+  --bg-surface:      #ffffff;
+  --border:          #e2e8f0;
+  --text-primary:    #0f172a;
+  --text-secondary:  #475569;
+  --accent:          #1a56db;
+  --accent-light:    #3b72f0;
+  --accent-glow:     rgba(26, 86, 219, 0.18);
+  --btn-ghost-border: #d1dae8;
+  --btn-ghost-text:  #374151;
+  --btn-ghost-hover: #f1f5f9;
 }
 
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
 body {
-  height: 100vh;
-  background: linear-gradient(to right, #004ca3, #8ea6c2);
-  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  background: var(--bg-base);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 24px;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
 }
 
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 60%, rgba(26,86,219,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* botão de tema — canto superior direito, destaque visível */
+.theme-toggle-button {
+  position: fixed !important;
+  top: 16px !important;
+  right: 16px !important;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--accent);
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 1;
+  z-index: 1000;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease;
+}
+.theme-toggle-button:hover {
+  background: var(--accent-light);
+  box-shadow: 0 6px 20px var(--accent-glow);
+  transform: scale(1.06);
+}
+
+/* card central */
 .container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 16px;
+  position: relative;
+  z-index: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 40px 36px 36px;
+  border-radius: 20px;
   text-align: center;
-  width: 90%;
+  width: 100%;
   max-width: 400px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.04),
+    0 12px 40px rgba(0,0,0,0.08);
+  animation: entrar 0.5s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.04),
+    0 20px 56px rgba(0,0,0,0.12);
+}
+
+@keyframes entrar {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
 }
 
 .logo {
-  width: 170px;
-  padding: 0 0 0 15px;
-  margin-bottom: 1px
+  width: 156px;
+  margin: 0 auto 2px;
+  display: block;
+  border-radius: 8px;
 }
 
-
-
 h1 {
-  color: #002D62;
-  font-size: 22px;
-  margin-bottom: 16px;
+  color: var(--text-primary);
+  font-size: 21px;
+  font-weight: 700;
+  margin: 18px 0 10px;
+  letter-spacing: -0.025em;
 }
 
 p {
-  color: #333;
-  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 4px;
 }
 
-/* Estilo base para ambos */
-.botoes button,
-.botao-ajuda, .botao-maps, .theme-toggle-button {
-  margin-top: 0;
-  background-color: #00B3B3;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  font-size: 16px;
-  font-family: 'Segoe UI', sans-serif;
-  font-weight: bold;
-  border-radius: 8px;
+.container::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+  border-radius: 2px;
+  margin: 18px auto 0;
+}
+
+.botoes {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.botao-maps {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+  padding: 11px 26px;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  line-height: 1;
+  gap: 6px;
+  letter-spacing: 0.01em;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px var(--accent-glow);
 }
-
-
-/* Hover igual */
-.botoes button:hover,
-.botao-ajuda:hover, .botao-maps:hover, .theme-toggle-button:hover {
-  background-color: #009999;
+.botao-maps:hover {
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--accent-glow);
 }
+.botao-maps:active { transform: translateY(0); box-shadow: none; }
 
-/* Container dos botões */
-.botoes {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
+.botao-ajuda,
+.botoes button {
+  background: transparent;
+  color: var(--btn-ghost-text);
+  border: 1px solid var(--btn-ghost-border);
+  padding: 10px 22px;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
 }
-
-@media (max-width: 768px) {
-  .botoes {
-    flex-direction: column;
-  }
-
-  .botoes button,
-  .botao-ajuda {
-    width: 100%;
-  }
+.botao-ajuda:hover,
+.botoes button:hover {
+  background: var(--btn-ghost-hover);
+  border-color: #b4c0d8;
+  transform: translateY(-1px);
 }
-
-
-@media (max-width: 768px) {
-  .container {
-    padding: 30px 20px;
-  }
-
-  h1 {
-    font-size: 20px;
-  }
-
-  p {
-    font-size: 15px;
-  }
-
-  .botoes {
-    flex-direction: column;
-  }
-
-  .botao-ajuda,
-  .botoes button {
-    width: 100%;
-  }
-}
-
 
 @media (max-width: 480px) {
-  .logo {
-    width: 140px;
-  }
-
-  h1 {
-    font-size: 18px;
-  }
-
-  p {
-    font-size: 14px;
-  }
-
+  .container { padding: 32px 22px 28px; border-radius: 16px; }
+  .botoes { flex-direction: column; }
+  .botao-maps, .botao-ajuda, .botoes button { width: 100%; justify-content: center; }
+  h1 { font-size: 18px; }
 }

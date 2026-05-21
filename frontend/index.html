@@ -2,22 +2,38 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mapa Interativo - UniBH</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="style-index-light.css" id="theme-stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style-index-light.css?v=6" id="theme-stylesheet" />
+  <style>
+    .theme-toggle-button .icon-moon { display: none; }
+    body.theme-dark .theme-toggle-button .icon-sun  { display: none; }
+    body.theme-dark .theme-toggle-button .icon-moon { display: block; }
+  </style>
 </head>
 <body>
-  
+  <button id="theme-toggle" class="theme-toggle-button" title="Alternar tema" aria-label="Alternar tema">
+    <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
   <div class="container">
     <img src="logo-unibh.jpg" alt="Logo UniBH" class="logo" />
     <h1>Mapa Interativo</h1>
     <p>Explore o campus da UniBH com nosso mapa interativo.</p>
     <p>Feito por alunos, para alunos.</p>
     <div class="botoes">
-      <a href="maps.html" class="botao-maps">Entrar</a>
+      <a href="maps.html" class="botao-maps">Entrar no Mapa</a>
       <a href="ajuda.html" class="botao-ajuda">Ajuda</a>
-      <button id="theme-toggle" class="theme-toggle-button">Alternar Tema</button>
     </div>
   </div>
 

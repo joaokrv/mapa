@@ -80,11 +80,8 @@ function setupToggleMenu() {
     .getElementById("toggle-search")
     .addEventListener("click", function () {
       const searchBox = document.getElementById("search-box");
-      searchBox.classList.toggle("aberto"); // Alterna a classe 'aberto' para mostrar/esconder
-      // Altera o texto do botão de acordo com o estado do menu
-      this.textContent = searchBox.classList.contains("aberto")
-        ? "✕ Ocultar"
-        : "☰ Busca";
+      const isAberto = searchBox.classList.toggle("aberto");
+      this.classList.toggle("active", isAberto);
     });
 }
 
@@ -125,7 +122,7 @@ function selecionarLocal(nome, campo) {
   // Fecha o menu de busca em telas menores (mobile)
   if (window.innerWidth < 768) {
     document.getElementById("search-box").classList.remove("aberto");
-    document.getElementById("toggle-search").textContent = "☰ Busca";
+    document.getElementById("toggle-search").classList.remove("active");
   }
 }
 
@@ -321,7 +318,7 @@ async function calcularRota() {
     try {
       // Faz uma requisição POST para a API de rota
       const response = await fetch(
-        "https://mapa-unibh-backend.onrender.com/api/rota",
+        `${API_BASE}/api/rota`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -342,9 +339,9 @@ async function calcularRota() {
       const pontosLatLng = data.pontos.map((p) => L.latLng(p[0], p[1]));
       desenharRota(pontosLatLng, data.origem, data.destino); // Desenha a rota no mapa
 
-      // Fecha o menu de busca e restaura o texto do botão (para mobile)
+      // Fecha o menu de busca
       document.getElementById("search-box").classList.remove("aberto");
-      document.getElementById("toggle-search").textContent = "☰ Busca";
+      document.getElementById("toggle-search").classList.remove("active");
     } catch (error) {
       console.error("Erro:", error);
       alert("Erro ao calcular rota: " + error.message);
@@ -361,9 +358,7 @@ async function getCoordinates(local) {
   try {
     // Faz uma requisição GET para a API de busca de local
     const response = await fetch(
-      `https://mapa-unibh-backend.onrender.com/api/buscar-local?local=${encodeURIComponent(
-        local
-      )}`
+      `${API_BASE}/api/buscar-local?local=${encodeURIComponent(local)}`
     );
     const data = await response.json();
 
@@ -513,12 +508,57 @@ function setupClearButtonVisibility() {
   });
 }
 
+const API_BASE =
+  location.hostname === "localhost" || location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : "https://mapa-unibh-backend.onrender.com";
+
+// Busca os locais da API e popula datalists e lista de atalhos.
+async function carregarLocais() {
+  try {
+    const res = await fetch(`${API_BASE}/api/locais`);
+    const locais = await res.json();
+    const nomes = Object.keys(locais);
+
+    const capitalizar = (s) => s.replace(/\b\w/g, (c) => c.toUpperCase());
+
+    ["sugestoes-origem", "sugestoes-destino"].forEach((id) => {
+      const dl = document.getElementById(id);
+      if (!dl) return;
+      dl.innerHTML = "";
+      nomes.forEach((nome) => {
+        const opt = document.createElement("option");
+        opt.value = capitalizar(nome);
+        dl.appendChild(opt);
+      });
+    });
+
+    const lista = document.querySelector(".locais-list ul");
+    if (lista) {
+      lista.innerHTML = "";
+      nomes.forEach((nome) => {
+        const li = document.createElement("li");
+        li.dataset.local = capitalizar(nome);
+        li.dataset.campo = "origem";
+        li.textContent = capitalizar(nome);
+        li.addEventListener("click", function () {
+          selecionarLocal(this.dataset.local, this.dataset.campo);
+        });
+        lista.appendChild(li);
+      });
+    }
+  } catch (err) {
+    console.warn("Não foi possível carregar locais da API:", err.message);
+  }
+}
+
 // --- Inicialização do DOM e Event Listeners ---
 
 // Garante que o script só execute após o DOM estar completamente carregado.
 document.addEventListener("DOMContentLoaded", () => {
   // Inicialização do mapa
   initMap();
+  carregarLocais();
 
   // Configuração dos botões e menus
   setupToggleMenu(); // Menu retrátil de busca
@@ -541,19 +581,14 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("Elemento com ID 'toggle-share' não encontrado no DOM.");
   }
 
-  // Configuração do botão de fechar (o "X") do menu de busca
+  // Botão de fechar (X) dentro do painel
   const searchBox = document.getElementById("search-box");
   const toggleSearchBtn = document.getElementById("toggle-search");
-  const closeBtn = document.querySelector(".input-box .close-btn");
-  if (closeBtn && searchBox && toggleSearchBtn) {
+  const closeBtn = document.querySelector("#search-box .close-btn");
+  if (closeBtn) {
     closeBtn.addEventListener("click", () => {
-      searchBox.classList.remove("aberto"); // Remove a classe 'aberto'
-      searchBox.classList.add("recolhido"); // Adiciona classe 'recolhido' (para animação, talvez)
-      toggleSearchBtn.textContent = "☰ Busca"; // Restaura o texto do botão de busca
+      searchBox.classList.remove("aberto");
+      toggleSearchBtn.classList.remove("active");
     });
-  } else {
-    console.warn(
-      "Botão de fechar ou search-box ou toggle-search não encontrado no DOM."
-    );
   }
 });

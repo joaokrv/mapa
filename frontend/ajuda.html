@@ -4,102 +4,91 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ajuda - Mapa Interativo UniBH</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style-ajuda-light.css" id="theme-stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style-ajuda-light.css?v=6" id="theme-stylesheet" />
+    <style>
+      .theme-toggle-button .icon-moon { display: none; }
+      body.theme-dark .theme-toggle-button .icon-sun  { display: none; }
+      body.theme-dark .theme-toggle-button .icon-moon { display: block; }
+    </style>
   </head>
   <body>
+    <a href="index.html" class="voltar">← Voltar</a>
+
+    <button id="theme-toggle" class="theme-toggle-button" title="Alternar tema" aria-label="Alternar tema">
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
     <header>
-      <a href="index.html" class="voltar">Voltar</a>
-      <h1>Ajuda - Mapa Interativo UniBH</h1>
+      <h1>Ajuda — Mapa UniBH</h1>
     </header>
 
     <div class="container">
       <div class="intro">
-        <h2>Como utilizar o sistema de localização</h2>
-        <p>Aprenda a encontrar locais no campus da UniBH com facilidade!</p>
+        <h2>Como usar o mapa interativo</h2>
+        <p>Encontre qualquer local do campus em poucos segundos.</p>
       </div>
 
       <div class="steps">
         <div class="card">
-          <h3>1. Clique em “Buscar”</h3>
-          <img src="imagem1.png" alt="Buscar no canto inferior esquerdo" />
-          <p>
-            Use o botão de busca no centro da tela para começar a navegação.
-          </p>
+          <h3>1. Abra a busca</h3>
+          <img src="imagem1.png" alt="Botão de busca na barra inferior" />
+          <p>Toque no ícone de lupa na barra de ações no centro da tela.</p>
         </div>
 
         <div class="card">
-          <h3>2. Adicione sua localização</h3>
-          <img src="imagem2.png" alt="Campo de localização" />
-          <p>
-            Digite onde você está (como portaria ou estacionamento) no primeiro
-            campo.
-          </p>
+          <h3>2. Defina a origem</h3>
+          <img src="imagem2.png" alt="Campo de origem" />
+          <p>Digite onde você está (portaria, estacionamento…) ou use o GPS 📍.</p>
         </div>
 
         <div class="card">
           <h3>3. Escolha o destino</h3>
-          <img src="imagem3.png" alt="Escolher destino" />
-          <p>No segundo campo, digite para onde quer ir (bloco, setor...)</p>
+          <img src="imagem3.png" alt="Campo de destino" />
+          <p>No segundo campo, informe para onde quer ir.</p>
         </div>
 
         <div class="card">
           <h3>4. Calcule a rota</h3>
           <img src="imagem4.png" alt="Botão Calcular Rota" />
-          <p>Depois de preencher os dois campos, clique em “Calcular Rota”.</p>
+          <p>Clique em <strong>Calcular Rota</strong> para ver o caminho no mapa.</p>
         </div>
 
         <div class="card">
-          <h3>5. Siga o caminho</h3>
-          <img src="imagem5.png" alt="Caminho gerado no mapa" />
-          <p>O mapa mostrará o caminho mais rápido até o local escolhido.</p>
+          <h3>5. Siga o trajeto</h3>
+          <img src="imagem5.png" alt="Rota desenhada no mapa" />
+          <p>A linha azul indica o caminho mais rápido a pé até o destino.</p>
         </div>
       </div>
 
-      <div class="extra" style="margin-top: 2rem">
+      <div class="extra" style="margin-top: 24px">
         <div class="card">
-          <h3>Dicas</h3>
-          <p>
-            Preste atenção nas placas do campus para saber onde está e facilitar
-            o uso do mapa.
-          </p>
-          <br />
-          <p>
-            Utilize o botão de GPS para preencher sua localização
-            automaticamente.
-          </p>
-          <br />
-          <p>
-            Pergunte aos funcionários da instituição durante o caminho, caso
-            tenha dúvidas.
-          </p>
+          <h3>Dicas úteis</h3>
+          <p>Preste atenção nas placas do campus para confirmar sua posição.</p>
+          <p>Use o botão 📍 para preencher sua localização automaticamente.</p>
+          <p>Em caso de dúvida, pergunte aos funcionários durante o trajeto.</p>
         </div>
 
         <div class="card">
-          <h3>Curiosidades do Projeto</h3>
-          <p>
-            Projeto feito pela turma de Engenharia de Software (5º período) do
-            UniBH, com o intuito de ajudar novos alunos a se localizarem no
-            campus.
-          </p>
-          <p>
-            <strong>Participantes:</strong> Andre, Bernardo Luiz, Breno Yohan,
-            Eduardo, Guilherme Lustosa, João Victor Oliveira, Laysla, Marian
-          </p>
+          <h3>Sobre o projeto</h3>
+          <p>Desenvolvido pela turma de Engenharia de Software (5º período) do UniBH, para facilitar a orientação de novos alunos no campus.</p>
+          <p><strong>Equipe:</strong> André, Bernardo, Breno, Eduardo, Guilherme, João Victor, Laysla, Marian.</p>
         </div>
       </div>
 
       <div class="thank-you">Obrigado por usar o mapa! 💙</div>
     </div>
 
-    <footer>
-      Projeto desenvolvido por alunos do UniBH - Engenharia de Software
-    </footer>
+    <footer>Projeto desenvolvido por alunos do UniBH — Engenharia de Software</footer>
 
     <script src="theme.js"></script>
   </body>

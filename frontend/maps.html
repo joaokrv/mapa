@@ -5,125 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Maps UniBH</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="style-maps-light.css" id="theme-stylesheet" />
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style-maps-light.css?v=5" id="theme-stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   </head>
   <body>
-    <div class="search-container">
-      <div class="buttons-container">
-        <!-- Botão para expandir/recolher -->
-        <button id="toggle-search" class="toggle-btn">☰ Busca</button>
-        <button id="toggle-help" class="toggle-ajuda">Ajuda</button>
-        <button id="toggle-share" class="share-location">
-          Compartilhar Localização
-        </button>
-        <button id="toggle-route" class="toggle-route">Limpar Rota</button>
-      </div>
-
-      <!-- Caixa de busca (inicialmente recolhida) -->
-      <div class="input-box recolhido" id="search-box">
-        <button class="close-btn" aria-label="Fechar menu">X</button>
-        <!-- Caixa de permissão GPS -->
-        <div id="permissao-gps" class="permissao-box">
-          <p>Para usar sua localização exata no mapa:</p>
-          <button id="ativar-gps">Ativar GPS</button>
-        </div>
-
-        <!-- Lista de locais frequentes -->
-        <div class="locais-list">
-          <h4>Locais Frequentes:</h4>
-          <ul>
-            <li data-local="Raízes 1" data-campo="origem">Raízes 1</li>
-            <li data-local="Raízes 2" data-campo="origem">Raízes 2</li>
-            <li data-local="Zito" data-campo="origem">Zito</li>
-            <li data-local="Capela" data-campo="origem">Capela</li>
-            <li data-local="Biblioteca" data-campo="origem">Biblioteca</li>
-            <li data-local="Portaria" data-campo="origem">Portaria</li>
-            <li data-local="Lanchonete" data-campo="origem">Lanchonete</li>
-            <li data-local="Estacionamento" data-campo="origem">
-              Estacionamento
-            </li>
-            <li data-local="Cafeteria" data-campo="origem">Cafeteria</li>
-          </ul>
-        </div>
-
-        <!-- Inputs de origem e destino -->
-        <div class="input-field">
-          <label for="origem">Origem:</label>
-          <div class="input-with-icon">
-            <input
-              type="text"
-              id="origem"
-              placeholder="Digite ou selecione"
-              list="sugestoes-origem"
-            />
-            <span class="clear-input-icon" data-target="origem">❌</span>
-            <span class="gps-icon" data-campo="origem">📍</span>
-          </div>
-          <datalist id="sugestoes-origem" class="sugestoes-origem">
-            <option value="📍 Minha Localização"></option>
-            <option value="Raizes 1"></option>
-            <option value="Raizes 2"></option>
-            <option value="Raizes 3"></option>
-            <option value="Raizes 4"></option>
-            <option value="Raizes 5"></option>
-            <option value="Raizes 6"></option>
-            <option value="Raizes 7"></option>
-            <option value="Raizes 8"></option>
-            <option value="Zito"></option>
-            <option value="Carandá"></option>
-            <option value="Veredas"></option>
-            <option value="Biblioteca"></option>
-            <option value="Lanchonete"></option>
-            <option value="Cafeteria"></option>
-            <option value="Capela"></option>
-            <option value="Portaria"></option>
-            <option value="Estacionamento"></option>
-          </datalist>
-        </div>
-
-        <div class="input-field">
-          <label for="destino">Destino:</label>
-          <div class="input-with-icon">
-            <input
-              type="text"
-              id="destino"
-              placeholder="Digite ou selecione"
-              list="sugestoes-destino"
-            />
-            <span class="clear-input-icon" data-target="destino">❌</span>
-          </div>
-          <datalist id="sugestoes-destino" class="sugestoes-destino">
-            <option value="📍 Minha Localização"></option>
-            <option value="Raizes 1"></option>
-            <option value="Raizes 2"></option>
-            <option value="Raizes 3"></option>
-            <option value="Raizes 4"></option>
-            <option value="Raizes 5"></option>
-            <option value="Raizes 6"></option>
-            <option value="Raizes 7"></option>
-            <option value="Raizes 8"></option>
-            <option value="Zito"></option>
-            <option value="Carandá"></option>
-            <option value="Veredas"></option>
-            <option value="Biblioteca"></option>
-            <option value="Lanchonete"></option>
-            <option value="Cafeteria"></option>
-            <option value="Capela"></option>
-            <option value="Portaria"></option>
-            <option value="Estacionamento"></option>
-          </datalist>
-        </div>
-
-        <button id="calcRota" class="primary-btn">Calcular Rota</button>
-      </div>
-    </div>
-
     <div id="map"></div>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Painel de busca (sobe ao abrir) -->
+    <div class="search-panel" id="search-box">
+      <div class="panel-header">
+        <span class="panel-title">Buscar Rota</span>
+        <button class="close-btn" aria-label="Fechar painel">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="permissao-gps" class="permissao-box">
+        <p>Para usar sua localização exata no mapa:</p>
+        <button id="ativar-gps">Ativar GPS</button>
+      </div>
+
+      <div class="locais-list">
+        <h4>Locais do campus</h4>
+        <ul></ul>
+      </div>
+
+      <div class="input-field">
+        <label for="origem">Origem</label>
+        <div class="input-with-icon">
+          <input type="text" id="origem" placeholder="Digite ou selecione" list="sugestoes-origem" autocomplete="off" />
+          <datalist id="sugestoes-origem"></datalist>
+          <span class="clear-input-icon" data-target="origem" aria-label="Limpar origem">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+              <path d="M1 1l7 7M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="gps-icon" data-campo="origem" title="Usar minha localização">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <div class="input-field">
+        <label for="destino">Destino</label>
+        <div class="input-with-icon">
+          <input type="text" id="destino" placeholder="Digite ou selecione" list="sugestoes-destino" autocomplete="off" />
+          <datalist id="sugestoes-destino"></datalist>
+          <span class="clear-input-icon" data-target="destino" aria-label="Limpar destino">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+              <path d="M1 1l7 7M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <button id="calcRota" class="primary-btn">Calcular Rota</button>
+    </div>
+
+    <!-- Barra de ações flutuante -->
+    <div class="action-bar">
+      <button id="toggle-search" class="action-btn" title="Busca" aria-label="Abrir busca">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+          <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="bar-separator"></div>
+      <button id="toggle-route" class="action-btn" title="Limpar Rota" aria-label="Limpar rota">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button id="toggle-share" class="action-btn" title="Compartilhar localização" aria-label="Compartilhar">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/>
+          <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+          <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/>
+          <path d="M8.59 13.51l6.83 3.98M15.41 6.51L8.59 10.49" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+      </button>
+      <button id="toggle-help" class="action-btn" title="Ajuda" aria-label="Ir para ajuda">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+          <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </button>
+      <button id="theme-toggle" class="action-btn" title="Alternar tema" aria-label="Alternar tema">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="maps.js" type="module"></script>
     <script src="theme.js"></script>
   </body>

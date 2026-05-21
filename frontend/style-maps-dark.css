@@ -1,582 +1,458 @@
-/* ============================================= */
-/* RESET E CONFIGURAÇÕES GLOBAIS */
-/* ============================================= */
+/* =============================================
+   TEMA ESCURO — variáveis
+   ============================================= */
+:root {
+  --panel-bg:       rgba(13, 20, 38, 0.93);
+  --panel-border:   rgba(255, 255, 255, 0.07);
+  --panel-shadow:   0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
+  --bar-bg:         rgba(13, 20, 38, 0.90);
+  --bar-border:     rgba(255, 255, 255, 0.08);
+  --text-primary:   #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-label:     #cbd5e1;
+  --accent:         #4a80f5;
+  --accent-hover:   #3b6ee0;
+  --accent-glow:    rgba(74, 128, 245, 0.25);
+  --accent-subtle:  rgba(74, 128, 245, 0.10);
+  --input-bg:       rgba(30, 41, 60, 0.80);
+  --input-border:   rgba(255, 255, 255, 0.09);
+  --chip-bg:        rgba(74, 128, 245, 0.13);
+  --chip-hover:     rgba(74, 128, 245, 0.22);
+  --chip-text:      #93c5fd;
+  --icon-color:     #94a3b8;
+  --icon-hover-bg:  rgba(255, 255, 255, 0.07);
+  --icon-active-bg: rgba(74, 128, 245, 0.18);
+  --divider:        rgba(255, 255, 255, 0.09);
+  /* tema escuro: botão de tema mostra sol (para trocar para claro) */
+  --icon-sun-display:  flex;
+  --icon-moon-display: none;
+}
 
-/* Reset básico para remover margens e paddings padrão de todos os elementos */
-* {
+/* =============================================
+   RESET & BASE
+   ============================================= */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Estilos base para body e html */
-body,
-html {
+html, body {
   height: 100%;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  color: #fff;
-  margin: 0;
-  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ============================================= */
-/* ESTILOS DO MAPA */
-/* ============================================= */
-
-/* Container principal do mapa Leaflet */
+/* =============================================
+   MAPA
+   ============================================= */
 #map {
-  /* Cobre toda a área disponível */
   position: absolute;
-  /* Cor de fundo enquanto o mapa carrega */
-  background: #f8f9fa;
-  /* Dimensões */
-  height: 100vh;
-  width: 100%;
+  inset: 0;
+  z-index: 0;
+  background: #0d1426;
 }
 
-/* ============================================= */
-/* ESTILOS DOS MARCADORES */
-/* ============================================= */
-.marcador-origem {
-  filter: drop-shadow(0 0 3px rgb(255, 255, 255));
-}
-
+.marcador-origem,
 .marcador-destino {
-  filter: drop-shadow(0 0 3px rgb(255, 255, 255));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
 }
 
-/* ============================================= */
-/* FORMULÁRIO DE BUSCA */
-/* ============================================= */
-
-/* Container principal dos inputs */
-.input-box {
-  /* Posicionamento fixo na parte inferior */
+/* =============================================
+   PAINEL DE BUSCA
+   ============================================= */
+.search-panel {
   position: fixed;
-  bottom: 20px;
-  /* Centralização horizontal */
+  bottom: 80px;
   left: 50%;
-  transform: translateX(-50%);
-  /* Estilo visual */
-  background-color: #2d3748;
-  padding: 12px 16px;
-  border-radius: 8px;
-  /* Sombra para dar profundidade */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-  /* Garante que fique acima do mapa */
-  z-index: 1000;
-  /* Largura responsiva */
-  width: 90%;
-  max-width: 400px;
-  opacity: 1;
-  overflow-y: auto;
-}
-
-/* Container para agrupar inputs */
-.input-container {
-  /* Permite posicionamento absoluto dos elementos filhos */
-  position: relative;
-  /* Espaçamento entre grupos de inputs */
-  margin-bottom: 10px;
-}
-
-/* Ícone de GPS dentro dos inputs */
-.gps-icon {
-  /* Posicionamento preciso */
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 18px;
-  z-index: 3;
-  color: #e0e0e0;
-  padding: 2px 5px;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-/* Efeito ao passar o mouse no ícone */
-.gps-icon:hover {
-  color: white;
-  /* Efeito de leve crescimento */
-  transform: translateY(-50%) scale(1.1);
-}
-
-/* Estilos para o botão de limpar input */
-.clear-input-icon {
-  position: absolute;
-  right: 30px; /* Ajuste para não sobrepor o ícone do GPS */
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 16px;
-  color: #e0e0e0; /* Cor do X */
-  padding: 2px 6px;
-  border-radius: 50%;
-  transition: all 0.2s;
-  display: block; /* Oculta por padrão e será mostrado via JavaScript */
-  z-index: 3; /* Garante que fique acima do input e do ícone do GPS */
-}
-
-.clear-input-icon:hover {
-  color: white;
-  transform: translateY(-50%) scale(1.1);
-}
-
-/* ============================================= */
-/* ELEMENTOS DE FORMULÁRIO */
-/* ============================================= */
-
-/* Estilização básica dos inputs */
-.input-box input {
-  width: 100%;
-  /* Padding maior à direita para o ícone */
-  padding: 10px 35px 10px 10px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-/* Estilo especial para inputs com datalist */
-input[list] {
-  /* Adiciona ícone de seta personalizado */
-  background: #2d3748
-    url('data:image/svg+xml;utf8,<svg fill="%23E0E0E0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
-    no-repeat 98% center;
-  background-size: 20px;
-}
-
-/* Oculta o datalist mas mantém funcionalidade */
-datalist {
-  display: none;
-}
-
-/* Estilo das opções do datalist */
-datalist option {
-  color: #e0e0e0; /* Lighter text for datalist options */
-  background-color: #2d3748; /* Darker background for datalist options */
-}
-
-/* ============================================= */
-/* COMPONENTES ESPECÍFICOS */
-/* ============================================= */
-
-/* Caixa de permissão de geolocalização */
-.permissao-box {
-  background: #2d3748; /* Darker background for permission box */
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  text-align: center;
-  border: 1px solid #4a5568; /* Darker border */
-  display: none;
-}
-
-/* Texto dentro da caixa de permissão */
-.permissao-box p {
-  margin-bottom: 8px;
-  color: #e0e0e0;
-  font-size: 14px;
-}
-
-/* Botão da caixa de permissão */
-.permissao-box button {
-  background-color: #1a56db;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  /* Efeito hover suave */
-  transition: background 0.3s;
-}
-
-/* Efeito hover do botão */
-.permissao-box button:hover {
-  background-color: #143ba9;
-}
-
-/* Texto de dica secundária */
-.dica {
-  font-size: 12px;
-  color: #a0aec0;
-  margin-top: 8px;
-}
-
-/* ============================================= */
-/* BOTÕES PRINCIPAIS */
-/* ============================================= */
-
-/* Botão "Calcular Rota" */
-#calcRota {
-  background-color: #1a56db;
-  color: white;
-  font-weight: bold;
-  padding: 12px;
-  border-radius: 5px;
-  /* Transição para efeitos hover */
-  transition: all 0.3s ease;
-  width: 100%;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 5px;
-}
-
-/* Efeito hover do botão principal */
-#calcRota:hover {
-  background-color: #143ba9;
-  /* Leve zoom */
-  transform: scale(1.02);
-}
-
-/* Estado desativado do botão */
-#calcRota:disabled {
-  background-color: #666666;
-  cursor: not-allowed;
-  /* Remove transformações */
-  transform: none;
-}
-
-/* ============================================= */
-/* MENU RETRÁTIL */
-/* ============================================= */
-
-/* Container do menu de busca */
-.search-container {
-  position: fixed;
-  bottom: 10px; /* Distância padrão do fundo */
-  left: 50%; /* Centraliza horizontalmente */
-  transform: translateX(-50%); /* Ajuste para centralização horizontal */
-  z-index: 1000;
-  max-width: 300px; /* Limita a largura máxima em telas maiores */
-  width: calc(
-    100% - 40px
-  ); /* Garante que não colem nas bordas em telas pequenas */
-  padding: 0 10px; /* Espaçamento interno */
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Centraliza os itens horizontalmente */
-  gap: 10px; /* Espaçamento entre os itens */
-}
-
-/* Estilos dos botões dentro de .buttons-container */
-.buttons-container button {
-  width: 100%; /* Ocupa 100% da largura do .buttons-container */
-  max-width: 280px; /* Limita a largura máxima dos botões */
-  background: #1a56db;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 15px;
-  transition: all 0.3s;
-}
-
-.toggle-ajuda {
-  background: #1a56db;
-  color: white;
-  border: none;
-  padding: 6px 6px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s;
-}
-
-.toggle-ajuda:hover {
-  transform: scale(1.05);
-  background: #143ba9;
-}
-
-/* Botão de toggle do menu */
-.toggle-btn {
-  background: #1a56db;
-  color: white;
-  border: none;
-  padding: 6px 6px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s;
-}
-
-/* Efeito hover do botão toggle */
-.toggle-btn:hover {
-  transform: scale(1.02);
-  background: #143ba9;
-}
-
-/* Botão de compartilhar localização */
-.share-location {
-  background: #1a56db;
-  color: white;
-  border: none;
-  padding: 8px 6px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s;
-}
-
-/* Efeito hover do botão de compartilhar localização */
-.share-location:hover {
-  transform: scale(1.02);
-  background: #143ba9;
-}
-
-/* Efeitos botão limpar rota */
-.toggle-route {
-  background: #1a56db;
-  color: white;
-  border: none;
-  padding: 6px 6px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s;
-}
-
-/* Efeito hover do botão de limpar rota */
-.toggle-route:hover {
-  transform: scale(1.02);
-  background: #143ba9;
-}
-
-/* Estilos para o botão de fechar */
-.close-btn {
-  position: absolute; /* Posicionamento absoluto em relação ao .input-box */
-  top: 8px; /* Ajuste a distância do topo se necessário */
-  right: 8px; /* Ajuste a distância da direita se necessário */
-  background: #4a5568; /* Um fundo sutil para o botão */
-  border: 1px solid #718096; /* Uma borda sutil */
-  color: #e2e8f0; /* Cor do "X" */
-  font-size: 18px; /* Tamanho do "X" */
-  line-height: 1; /* Garante que o X fique centralizado verticalmente */
-  cursor: pointer;
-  padding: 6px 10px; /* Aumenta o padding para um tamanho clicável maior */
-  border-radius: 50%; /* Faz o botão ser um círculo */
-  width: 30px; /* Largura e altura para garantir que seja um círculo perfeito */
-  height: 30px;
-  display: flex; /* Para centralizar o 'X' */
-  align-items: center; /* Centraliza verticalmente */
-  justify-content: center; /* Centraliza horizontalmente */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave */
-  z-index: 10; /* Garante que fique acima de outros elementos */
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease; /* Transições suaves */
-}
-
-.close-btn:hover {
-  background: #636b7d; /* Fundo mais escuro ao passar o mouse */
-  color: white; /* Cor branca para o X ao passar o mouse */
-  border-color: #a0aec0; /* Borda mais clara */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada */
-}
-
-.close-btn i {
-  font-size: 16px;
-}
-
-/* Caixa de inputs (estado padrão - recolhido) */
-.input-box {
-  background: #2d3748;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-
-  /* Animações de recolhimento */
-  transition: all 0.3s ease-out; /* Mantenha isso para a transição suave */
-
-  /* Garante que esteja "esmagado" e não ocupe espaço para o conteúdo interno */
-  max-height: 0;
-  overflow: hidden;
+  width: min(380px, calc(100vw - 32px));
+  transform: translateX(-50%) translateY(calc(100% + 28px));
   opacity: 0;
-
-  /* Garantir que não seja clicável e não interfira */
-  visibility: hidden; /* Oculta visualmente e remove da árvore de acessibilidade */
-  pointer-events: none;
-  padding: 0 15px; /* Define padding horizontal, vertical será controlado pelo max-height */
+  visibility: hidden;
+  background: var(--panel-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  box-shadow: var(--panel-shadow);
+  padding: 16px;
+  z-index: 1000;
+  transition:
+    transform 0.40s cubic-bezier(0.34, 1.28, 0.64, 1),
+    opacity   0.22s ease,
+    visibility 0s 0.40s;
+  will-change: transform, opacity;
+  max-height: calc(100dvh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-/* Estado aberto do menu */
-.input-box.aberto {
-  max-height: 500px; /* Suficiente para mostrar o conteúdo */
+.search-panel.aberto {
+  transform: translateX(-50%) translateY(0);
   opacity: 1;
-  overflow-y: auto; /* Pode ser auto se preferir rolagem quando o conteúdo exceder */
-  visibility: visible; /* Torna visível */
-  pointer-events: auto; /* Permite cliques */
-
-  /* Aplique o padding total quando estiver aberto */
-  padding: 15px;
+  visibility: visible;
+  transition:
+    transform 0.40s cubic-bezier(0.34, 1.28, 0.64, 1),
+    opacity   0.22s ease,
+    visibility 0s 0s;
 }
 
-/* ============================================= */
-/* ELEMENTOS DO FORMULÁRIO AVANÇADO */
-/* ============================================= */
+.search-panel::-webkit-scrollbar { width: 3px; }
+.search-panel::-webkit-scrollbar-track { background: transparent; }
+.search-panel::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 4px; }
 
-/* Campo de input com label */
-.input-field {
-  margin-bottom: 15px;
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
 }
 
-/* Label dos campos */
+.panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.close-btn {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  padding: 0;
+  border: none;
+  background: var(--icon-hover-bg);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  line-height: 1;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.close-btn svg { display: block; flex-shrink: 0; }
+.close-btn:hover { background: var(--icon-active-bg); color: var(--accent); }
+
+/* =============================================
+   CHIPS DE LOCAIS
+   ============================================= */
+.locais-list { margin-bottom: 14px; }
+
+.locais-list h4 {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.locais-list ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.locais-list li {
+  padding: 5px 11px;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.locais-list li:hover  { background: var(--chip-hover); transform: translateY(-1px); }
+.locais-list li:active { transform: translateY(0); }
+
+/* =============================================
+   INPUTS
+   ============================================= */
+.input-field { margin-bottom: 12px; }
+
 .input-field label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #e0e0e0;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
 }
 
-/* Container para inputs com ícone */
 .input-with-icon {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-/* Input com ícone */
 .input-with-icon input {
   width: 100%;
-  padding: 10px 60px 10px 10px;
-  border: 1px solid #4a5568;
-  border-radius: 4px;
-  color: #e0e0e0;
-  background-color: #2d3748;
+  padding: 10px 66px 10px 12px;
+  font-family: inherit;
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: max(16px, 14px);
 }
 
-/* Lista de locais frequentes */
-.locais-list {
-  margin: 15px 0;
+.input-with-icon input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-/* Título da lista */
-.locais-list h4 {
-  color: #e0e0e0;
+.input-with-icon input::placeholder { color: var(--text-secondary); }
+
+.gps-icon {
+  position: absolute;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color 0.18s ease, background 0.18s ease;
+}
+.gps-icon:hover { color: var(--accent); background: var(--icon-hover-bg); }
+
+.clear-input-icon {
+  position: absolute;
+  right: 42px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: color 0.15s ease, background 0.15s ease;
+  z-index: 3;
+}
+.clear-input-icon:hover { color: var(--text-primary); background: var(--icon-hover-bg); }
+
+/* =============================================
+   CAIXA GPS
+   ============================================= */
+.permissao-box {
+  background: var(--accent-subtle);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+  text-align: center;
+  display: none;
+}
+
+.permissao-box p {
+  font-size: 13px;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 
-/* Lista de itens */
-.locais-list ul {
-  color: #e0e0e0;
-  list-style: none;
-  padding: 0;
-  /* Layout flexível */
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-/* Itens da lista */
-.locais-list li {
-  color: #e0e0e0; /* Lighter text for list item */
-  padding: 6px 12px;
-  background: #4a5568; /* Darker background for list item */
-  border-radius: 15px;
+.permissao-box button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
-  font-size: 14px;
-  /* Transição para hover */
-  transition: all 0.2s;
+  transition: background 0.2s ease;
+}
+.permissao-box button:hover { background: var(--accent-hover); }
+
+/* =============================================
+   BOTÃO CALCULAR ROTA
+   ============================================= */
+.primary-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  margin-top: 2px;
 }
 
-/* Efeito hover dos itens */
-.locais-list li:hover {
-  background: #2c3e50; /* Even darker background on hover */
+.primary-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px var(--accent-glow);
 }
 
-/* ============================================= */
-/* EFEITOS VISUAIS */
-/* ============================================= */
+.primary-btn:active  { transform: translateY(0); box-shadow: none; }
 
-/* Spinner de carregamento */
+.primary-btn:disabled {
+  background: var(--divider);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* =============================================
+   BARRA DE AÇÕES
+   ============================================= */
+.action-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 6px;
+  background: var(--bar-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--bar-border);
+  border-radius: 50px;
+  box-shadow: var(--panel-shadow);
+  z-index: 1001;
+  max-width: calc(100vw - 24px);
+}
+
+.action-btn {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--icon-color);
+  transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.action-btn:hover  { background: var(--icon-hover-bg);  color: var(--accent); transform: translateY(-1px); }
+.action-btn:active { transform: scale(0.90); background: var(--icon-active-bg); }
+.action-btn.active { background: var(--icon-active-bg); color: var(--accent); }
+
+.bar-separator {
+  width: 1px;
+  height: 22px;
+  background: var(--divider);
+  margin: 0 2px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.action-btn .icon-sun  { display: var(--icon-sun-display); }
+.action-btn .icon-moon { display: var(--icon-moon-display); }
+
+/* =============================================
+   TOOLTIPS DA ACTION BAR
+   ============================================= */
+.action-btn::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(241, 245, 249, 0.95);
+  color: #0f172a;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 5px 9px;
+  border-radius: 7px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  border: 5px solid transparent;
+  border-top-color: rgba(241, 245, 249, 0.95);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 10;
+}
+
+.action-btn:hover::after,
+.action-btn:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* =============================================
+   RESPONSIVO MOBILE
+   ============================================= */
+@media (max-width: 480px) {
+  .search-panel {
+    bottom: 78px;
+    border-radius: 16px;
+    padding: 12px 14px 14px;
+    width: calc(100vw - 20px);
+    max-height: calc(100dvh - 140px);
+  }
+
+  .action-btn { width: 42px; height: 42px; }
+
+  .action-btn::after,
+  .action-btn::before { display: none; }
+
+  .locais-list li { font-size: 11.5px; padding: 4px 9px; }
+}
+
+@media (max-width: 360px) {
+  .action-btn { width: 38px; height: 38px; }
+  .action-bar { gap: 0; padding: 4px 4px; }
+}
+
+/* =============================================
+   SPINNER
+   ============================================= */
+@keyframes spin { to { transform: rotate(360deg); } }
+
 .spinner {
   display: inline-block;
-  /* Animação giratória */
-  animation: spin 1s linear infinite;
-  margin-right: 8px;
+  animation: spin 0.75s linear infinite;
+  margin-right: 6px;
 }
 
-/* Animação do spinner */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ============================================= */
-/* RESPONSIVIDADE */
-/* ============================================= */
-
-/* Telas pequenas (celulares) */
+/* =============================================
+   RESPONSIVO
+   ============================================= */
 @media (max-width: 480px) {
-  .input-box {
-    bottom: 15px;
-    padding: 12px;
+  .search-panel {
+    bottom: 74px;
+    border-radius: 16px;
+    padding: 14px;
   }
 
-  .input-box input,
-  #calcRota {
-    font-size: 14px;
-  }
-
-  datalist option {
-    font-size: 14px;
-  }
-
-  .toggle-ajuda,
-  .toggle-btn,
-  .share-location {
-    width: 100%;
-    font-size: 16px;
-    padding: 10px 15px;
-  }
-}
-
-/* Telas médias (tablets) */
-@media (min-width: 481px) and (max-width: 767px) {
-  .input-box {
-    padding: 14px 18px;
-  }
-
-  .input-box input,
-  #calcRota {
-    font-size: 15px;
-  }
-}
-
-/* Telas grandes (desktops) */
-@media (min-width: 1024px) {
-  body {
-    font-size: 16px;
-  }
-
-  .input-box {
-    bottom: 30px;
-    padding: 16px 20px;
-    width: 400px;
-  }
-}
-
-/* Telas extra grandes */
-@media (min-width: 1440px) {
-  .input-box {
-    bottom: 40px;
-    padding: 18px 22px;
-    width: 450px;
-  }
-
-  .input-box input,
-  #calcRota {
-    font-size: 17px;
-  }
+  .action-btn { width: 40px; height: 40px; }
 }
